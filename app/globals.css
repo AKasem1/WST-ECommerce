@@ -1,8 +1,31 @@
 @import "tailwindcss";
 
+/* Font Faces */
+@font-face {
+  font-family: 'Biger Over';
+  src: url('/fonts/bBigerOver.ttf') format('truetype'),
+       url('/fonts/bBigerOver.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bein Black';
+  src: url('/fonts/beIN Black .ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Custom Color Variables */
+  --color-bg-primary: #BA5183;
+  --color-text-primary: #382A67;
+  --color-border-primary: #382A67;
 }
 
 @theme inline {
@@ -21,6 +44,6 @@
 
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: white;
   font-family: Arial, Helvetica, sans-serif;
 }
