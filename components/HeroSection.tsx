@@ -48,7 +48,7 @@ export default function HeroSection() {
             >
               <Link
                 href="/shop"
-                className="inline-block px-8 py-4 md:px-10 md:py-5 text-lg md:text-xl font-bold rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                className="group relative inline-flex items-center gap-2 px-6 py-3 md:px-7 md:py-3.5 text-base md:text-lg font-bold rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg"
                 style={{
                   backgroundColor: 'var(--color-text-primary)',
                   color: 'white'
@@ -60,7 +60,40 @@ export default function HeroSection() {
                   e.currentTarget.style.backgroundColor = 'var(--color-text-primary)';
                 }}
               >
-                متجرنا
+                {/* Text - fades out on hover */}
+                <span className="transition-all duration-300 group-hover:opacity-0 group-hover:scale-75">
+                  متجرنا
+                </span>
+                
+                {/* Arrow - fades out on hover */}
+                <svg
+                  className="w-6 h-6 transition-all duration-300 group-hover:opacity-0 group-hover:scale-75"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M7 16l-4-4m0 0l4-4m-4 4h18"
+                  />
+                </svg>
+
+                {/* Shopping Cart Icon - fades in on hover */}
+                <svg
+                  className="absolute inset-0 m-auto w-8 h-8 opacity-0 scale-50 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
               </Link>
             </motion.div>
           </div>

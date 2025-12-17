@@ -4,11 +4,10 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { categories } from '@/data/categories';
-import { Category } from '@/types/category';
+import type { CategoryResponse } from '@/types/category-api';
 
 interface NavbarProps {
-  categories: Category[];
+  categories: CategoryResponse[];
 }
 
 export default function Navbar({ categories }: NavbarProps) {
@@ -76,7 +75,19 @@ export default function Navbar({ categories }: NavbarProps) {
                 >
                   {link.name}
                   {link.hasDropdown && (
-                    <span className="mr-1 inline-block text-sm">▼</span>
+                    <svg
+                      className="mr-1 inline-block w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
                   )}
                 </Link>
 
@@ -99,7 +110,7 @@ export default function Navbar({ categories }: NavbarProps) {
                             transition={{ delay: idx * 0.05, duration: 0.3 }}
                           >
                             <Link
-                              href={`/shop/${category.slug}`}
+                              href={`/shop?category=${category._id}`}
                               className="block px-6 py-3 text-right transition-colors duration-300 border-b border-gray-100 last:border-b-0"
                               style={{
                                 color: 'var(--color-text-primary)'
@@ -181,9 +192,21 @@ export default function Navbar({ categories }: NavbarProps) {
                           color: 'var(--color-text-primary)'
                         }}
                       >
-                        <span className="text-sm">
-                          {isMobileCategoriesOpen ? '▲' : '▼'}
-                        </span>
+                        <svg
+                          className={`w-5 h-5 transition-transform duration-300 ${
+                            isMobileCategoriesOpen ? 'rotate-180' : ''
+                          }`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
                         <span>{link.name}</span>
                       </button>
                       
@@ -204,7 +227,7 @@ export default function Navbar({ categories }: NavbarProps) {
                                 transition={{ delay: idx * 0.05, duration: 0.2 }}
                               >
                                 <Link
-                                  href={`/shop/${category.slug}`}
+                                  href={`/shop?category=${category._id}`}
                                   className="block py-3 px-6 text-right transition-colors duration-300"
                                   style={{
                                     color: 'var(--color-text-primary)'
