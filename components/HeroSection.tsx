@@ -1,122 +1,129 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import Link from 'next/link';
+
+const heroImages = [
+  '/images/hero/bg-1.jpg',
+  '/images/hero/bg-2.jpeg',
+  '/images/hero/bg-3.jpeg',
+  '/images/hero/bg-4.jpeg',
+];
 
 export default function HeroSection() {
-  // Animation delays - orchestrated sequence after navbar (0.6s)
-  const baseDelay = 0.8; // Start after navbar animation
-  const imageDelay = baseDelay;
-  const headlineDelay = baseDelay + 0.3;
-  const subheadlineDelay = baseDelay + 0.5;
-  const ctaDelay = baseDelay + 0.7;
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Auto-advance carousel every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const goToPrevious = () => {
+    setCurrentIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
+  };
+
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % heroImages.length);
+  };
 
   return (
-    <section className="bg-white py-12 md:py-20 lg:py-24">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col-reverse md:flex-row items-center gap-8 md:gap-12 lg:gap-16">
-          {/* Text Content - Right Side */}
-          <div className="flex-1 text-center md:text-right space-y-6 md:space-y-8">
-            {/* Headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: headlineDelay, duration: 0.6, ease: 'easeOut' }}
-              className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight"
-              style={{ color: 'var(--color-text-primary)' }}
-            >
-              مؤسسة حلول الوسام للتجارة
-            </motion.h1>
+    <section className="relative w-full h-screen overflow-hidden">
+      {/* Background Image Carousel */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.7, ease: 'easeInOut' }}
+          className="absolute inset-0"
+        >
+          <Image
+            src={heroImages[currentIndex]}
+            alt={`Hero background ${currentIndex + 1}`}
+            fill
+            className="object-cover"
+            priority={currentIndex === 0}
+            sizes="100vw"
+          />
+          {/* Dark overlay for better contrast */}
+          <div className="absolute inset-0 bg-black/30" />
+        </motion.div>
+      </AnimatePresence>
 
-            {/* Subheadline */}
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: subheadlineDelay, duration: 0.6, ease: 'easeOut' }}
-              className="text-xl md:text-2xl lg:text-3xl"
-              style={{ color: 'var(--color-bg-primary)' }}
-            >
-              لتقديم حلول أمنية ذكية لراحة بالك
-            </motion.p>
-
-            {/* CTA Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: ctaDelay, duration: 0.6, ease: 'easeOut' }}
-            >
-              <Link
-                href="/shop"
-                className="group relative inline-flex items-center gap-2 px-6 py-3 md:px-7 md:py-3.5 text-base md:text-lg font-bold rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                style={{
-                  backgroundColor: 'var(--color-text-primary)',
-                  color: 'white'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-bg-primary)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-text-primary)';
-                }}
-              >
-                {/* Text - fades out on hover */}
-                <span className="transition-all duration-300 group-hover:opacity-0 group-hover:scale-75">
-                  متجرنا
-                </span>
-                
-                {/* Arrow - fades out on hover */}
-                <svg
-                  className="w-6 h-6 transition-all duration-300 group-hover:opacity-0 group-hover:scale-75"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 16l-4-4m0 0l4-4m-4 4h18"
-                  />
-                </svg>
-
-                {/* Shopping Cart Icon - fades in on hover */}
-                <svg
-                  className="absolute inset-0 m-auto w-8 h-8 opacity-0 scale-50 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-              </Link>
-            </motion.div>
-          </div>
-
-          {/* Hero Image - Left Side */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: imageDelay, duration: 0.8, ease: 'easeOut' }}
-            className="flex-1 w-full max-w-lg md:max-w-none"
+      {/* Navigation Arrows */}
+      <div className="absolute inset-0 flex items-center justify-between px-4 md:px-8 lg:px-12 z-10">
+        {/* Left Arrow */}
+        <motion.button
+          onClick={goToPrevious}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="group relative w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-all duration-300 hover:bg-white/40 hover:scale-110"
+          aria-label="Previous image"
+        >
+          <svg
+            className="w-6 h-6 md:w-8 md:h-8 text-white transition-transform duration-300 group-hover:scale-110"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            <div className="relative w-full aspect-[4/3] md:aspect-[16/10] rounded-2xl overflow-hidden shadow-2xl">
-              <Image
-                src="/images/hero-image.jpg"
-                alt="مؤسسة حلول الوسام للتجارة"
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-          </motion.div>
-        </div>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2.5}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </motion.button>
+
+        {/* Right Arrow */}
+        <motion.button
+          onClick={goToNext}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="group relative w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-all duration-300 hover:bg-white/40 hover:scale-110"
+          aria-label="Next image"
+        >
+          <svg
+            className="w-6 h-6 md:w-8 md:h-8 text-white transition-transform duration-300 group-hover:scale-110"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2.5}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </motion.button>
+      </div>
+
+      {/* Carousel Indicators */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3 z-10">
+        {heroImages.map((_, index) => (
+          <motion.button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
+            className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 ${
+              index === currentIndex
+                ? 'bg-white scale-125'
+                : 'bg-white/50 hover:bg-white/75'
+            }`}
+            aria-label={`Go to image ${index + 1}`}
+          />
+        ))}
       </div>
     </section>
   );

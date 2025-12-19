@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSession } from 'next-auth/react';
 import type { CategoryResponse } from '@/types/category-api';
 
 interface NavbarProps {
@@ -11,6 +12,7 @@ interface NavbarProps {
 }
 
 export default function Navbar({ categories }: NavbarProps) {
+  const { data: session } = useSession();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileCategoriesOpen, setIsMobileCategoriesOpen] = useState(false);
@@ -19,7 +21,7 @@ export default function Navbar({ categories }: NavbarProps) {
     { name: 'الرئيسية', href: '/' },
     { name: 'المتجر', href: '/shop', hasDropdown: true },
     { name: 'تواصل معنا', href: '/contact' },
-    { name: 'من نحن', href: '/about' }
+    { name: 'من نحن', href: '/about-us' }
   ];
 
   return (
@@ -41,8 +43,8 @@ export default function Navbar({ categories }: NavbarProps) {
               <Image
                 src="/images/logo.png"
                 alt="Logo"
-                width={120}
-                height={60}
+                width={160}
+                height={80}
                 className="object-contain"
               />
             </Link>
@@ -134,6 +136,31 @@ export default function Navbar({ categories }: NavbarProps) {
                 )}
               </motion.div>
             ))}
+            
+            {/* Dashboard Button for Admin */}
+            {session?.user?.role === 'admin' && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 + navLinks.length * 0.1, duration: 0.5 }}
+              >
+                <Link
+                  href="/dashboard"
+                  className="px-4 py-2 rounded-lg text-white font-medium transition-all duration-300 hover:shadow-lg"
+                  style={{
+                    backgroundColor: 'var(--color-bg-primary)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  لوحة التحكم
+                </Link>
+              </motion.div>
+            )}
           </div>
 
           {/* Mobile Hamburger Menu */}
@@ -271,6 +298,27 @@ export default function Navbar({ categories }: NavbarProps) {
                   )}
                 </motion.div>
               ))}
+              
+              {/* Dashboard Button for Admin - Mobile */}
+              {session?.user?.role === 'admin' && (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: navLinks.length * 0.1, duration: 0.3 }}
+                  className="pt-4"
+                >
+                  <Link
+                    href="/dashboard"
+                    className="block w-full text-center py-3 rounded-lg text-white font-medium transition-all duration-300"
+                    style={{
+                      backgroundColor: 'var(--color-bg-primary)'
+                    }}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    لوحة التحكم
+                  </Link>
+                </motion.div>
+              )}
             </div>
           </motion.div>
         )}

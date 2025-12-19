@@ -4,6 +4,9 @@ import Product from '@/models/Product';
 import mongoose from 'mongoose';
 import type { UpdateProductRequest, ProductResponse } from '@/types/product';
 
+// Force Node.js runtime (required for MongoDB/crypto)
+export const runtime = 'nodejs';
+
 // GET /api/products/[id] - Get single product by ID
 export async function GET(
   request: NextRequest,

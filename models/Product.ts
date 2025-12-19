@@ -9,6 +9,7 @@ export interface IProduct extends Document {
   msrpPrice: number;
   dppPrice: number;
   categoryId: mongoose.Schema.Types.ObjectId;
+  visibility: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -51,6 +52,11 @@ const ProductSchema: Schema<IProduct> = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'Category',
+    },
+    visibility: {
+      type: Boolean,
+      required: true,
+      default: true,
     },
   },
   {

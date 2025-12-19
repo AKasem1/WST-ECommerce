@@ -15,7 +15,12 @@ export async function getCategories(): Promise<CategoryResponse[]> {
     });
 
     if (!response.ok) {
-      console.error('Failed to fetch categories:', response.statusText);
+      const errorText = await response.text();
+      console.error('Failed to fetch categories:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorText,
+      });
       return [];
     }
 
@@ -26,3 +31,4 @@ export async function getCategories(): Promise<CategoryResponse[]> {
     return [];
   }
 }
+

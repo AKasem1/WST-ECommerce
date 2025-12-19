@@ -4,6 +4,9 @@ import Category from '@/models/Category';
 import mongoose from 'mongoose';
 import type { UpdateCategoryRequest, CategoryResponse } from '@/types/category-api';
 
+// Force Node.js runtime (required for MongoDB/crypto)
+export const runtime = 'nodejs';
+
 // GET /api/categories/[id] - Get single category by MongoDB ID
 export async function GET(
   request: NextRequest,

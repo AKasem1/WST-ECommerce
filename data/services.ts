@@ -24,5 +24,11 @@ export const services: Service[] = [
     name: 'طابعات البطاقات',
     image: '/images/services/card-printers.webp',
     slug: 'card-printers'
+  },
+  {
+    id: 5,
+    name: 'البرامج المحاسبية',
+    image: '/images/services/programs.jpg',
+    slug: 'programs'
   }
 ];

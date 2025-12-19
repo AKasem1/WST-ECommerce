@@ -6,7 +6,10 @@ export interface IService extends Document {
   name: string;
   image: string;
   slug: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
+
 
 // Service Schema
 const ServiceSchema: Schema<IService> = new Schema(
