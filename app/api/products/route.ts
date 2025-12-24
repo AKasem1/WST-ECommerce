@@ -10,6 +10,16 @@ import type {
   BulkCreateProductsResponse,
 } from '@/types/product';
 
+// Helper function to generate URL-friendly slug from model number
+function generateSlug(modelNumber: string): string {
+  return modelNumber
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/[\s_]+/g, '-') // Replace spaces and underscores with hyphens
+    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+}
+
 // POST /api/products - Create multiple products
 export async function POST(request: NextRequest) {
   try {
@@ -35,21 +45,22 @@ export async function POST(request: NextRequest) {
         const {
           modelNumber,
           productImage,
-          productDescription,
+          productSpecs,
           quantity,
-          msrpPrice,
-          dppPrice,
+          price,
           categoryId,
+          visibility,
         } = productData;
 
         // Validate required fields
         if (
           !modelNumber ||
           !productImage ||
-          !productDescription ||
+          !productSpecs ||
+          !Array.isArray(productSpecs) ||
+          productSpecs.length === 0 ||
           quantity === undefined ||
-          msrpPrice === undefined ||
-          dppPrice === undefined ||
+          price === undefined ||
           categoryId === undefined
         ) {
           failed.push({
@@ -68,10 +79,10 @@ export async function POST(request: NextRequest) {
           continue;
         }
 
-        if (msrpPrice < 0 || dppPrice < 0) {
+        if (price < 0) {
           failed.push({
             product: productData,
-            error: 'Prices must be greater than or equal to 0',
+            error: 'Price must be greater than or equal to 0',
           });
           continue;
         }
@@ -95,30 +106,47 @@ export async function POST(request: NextRequest) {
           continue;
         }
 
+        // Generate unique slug from model number
+        let slug = generateSlug(modelNumber);
+        let slugCounter = 1;
+        
+        // Check if slug already exists and make it unique if needed
+        while (await Product.findOne({ slug })) {
+          slug = `${generateSlug(modelNumber)}-${slugCounter}`;
+          slugCounter++;
+        }
+
         // Create product (Mongoose will convert categoryId string to ObjectId)
         const product = await Product.create({
           modelNumber,
           productImage,
-          productDescription,
+          slug,
+          productSpecs,
           quantity,
-          msrpPrice,
-          dppPrice,
+          price,
           categoryId: categoryId as any,
+          visibility: visibility ?? true,
         });
 
         created.push({
           _id: product._id.toString(),
           modelNumber: product.modelNumber,
           productImage: product.productImage,
-          productDescription: product.productDescription,
+          slug: product.slug,
+          productSpecs: product.productSpecs,
           quantity: product.quantity,
-          msrpPrice: product.msrpPrice,
-          dppPrice: product.dppPrice,
+          price: product.price,
           categoryId: product.categoryId,
+          visibility: product.visibility,
           createdAt: product.createdAt,
           updatedAt: product.updatedAt,
         });
       } catch (error: any) {
+        console.error('Failed to create product:', {
+          modelNumber: productData.modelNumber,
+          error: error.message,
+          stack: error.stack,
+        });
         failed.push({
           product: productData,
           error: error.message || 'Failed to create product',
@@ -183,15 +211,15 @@ export async function GET(request: NextRequest) {
     }
 
     if (minPrice || maxPrice) {
-      query.msrpPrice = {};
-      if (minPrice) query.msrpPrice.$gte = parseFloat(minPrice);
-      if (maxPrice) query.msrpPrice.$lte = parseFloat(maxPrice);
+      query.price = {};
+      if (minPrice) query.price.$gte = parseFloat(minPrice);
+      if (maxPrice) query.price.$lte = parseFloat(maxPrice);
     }
 
     if (search) {
       query.$or = [
         { modelNumber: { $regex: search, $options: 'i' } },
-        { productDescription: { $regex: search, $options: 'i' } },
+        { productSpecs: { $elemMatch: { $regex: search, $options: 'i' } } },
       ];
     }
 
@@ -205,11 +233,12 @@ export async function GET(request: NextRequest) {
       _id: product._id.toString(),
       modelNumber: product.modelNumber,
       productImage: product.productImage,
-      productDescription: product.productDescription,
+      slug: product.slug,
+      productSpecs: product.productSpecs,
       quantity: product.quantity,
-      msrpPrice: product.msrpPrice,
-      dppPrice: product.dppPrice,
+      price: product.price,
       categoryId: product.categoryId,
+      visibility: product.visibility,
       createdAt: product.createdAt,
       updatedAt: product.updatedAt,
     }));

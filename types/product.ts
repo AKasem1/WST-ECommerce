@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 export interface CreateProductRequest {
   modelNumber: string;
   productImage: string;
-  productDescription: string;
+  productSpecs: string[];
   quantity: number;
-  msrpPrice: number;
-  dppPrice: number;
+  price: number;
   categoryId: mongoose.Schema.Types.ObjectId;
+  visibility?: boolean;
 }
 
 export interface CreateProductsRequest {
@@ -17,22 +17,23 @@ export interface CreateProductsRequest {
 export interface UpdateProductRequest {
   modelNumber?: string;
   productImage?: string;
-  productDescription?: string;
+  productSpecs?: string[];
   quantity?: number;
-  msrpPrice?: number;
-  dppPrice?: number;
+  price?: number;
   categoryId?: mongoose.Schema.Types.ObjectId;
+  visibility?: boolean;
 }
 
 export interface ProductResponse {
   _id: string;
   modelNumber: string;
   productImage: string;
-  productDescription: string;
+  productSpecs: string[];
+  slug: string;
   quantity: number;
-  msrpPrice: number;
-  dppPrice: number;
+  price: number;
   categoryId: mongoose.Schema.Types.ObjectId;
+  visibility: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

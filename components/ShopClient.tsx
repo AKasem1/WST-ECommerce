@@ -79,7 +79,8 @@ export default function ShopClient({
   };
 
   const handleWhatsApp = (product: ProductResponse) => {
-    const message = `مرحباً، أنا مهتم بالمنتج: ${product.modelNumber}\n${product.productDescription}`;
+    const specs = product.productSpecs?.join('\n') || '';
+    const message = `مرحباً، أنا مهتم بالمنتج: ${product.modelNumber}\n${specs}`;
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -195,17 +196,28 @@ export default function ShopClient({
                           {product.modelNumber}
                         </h3>
 
-                        {/* Description */}
-                        <p className="text-sm text-gray-600 line-clamp-2 min-h-[40px]">
-                          {product.productDescription}
-                        </p>
+                        {/* Specs */}
+                        <div className="text-sm text-gray-600 min-h-[40px]">
+                          {product.productSpecs && product.productSpecs.length > 0 ? (
+                            <ul className="list-disc list-inside space-y-1">
+                              {product.productSpecs.slice(0, 2).map((spec, idx) => (
+                                <li key={idx} className="line-clamp-1">{spec}</li>
+                              ))}
+                              {product.productSpecs.length > 2 && (
+                                <li className="text-gray-400 text-xs">+{product.productSpecs.length - 2} المزيد</li>
+                              )}
+                            </ul>
+                          ) : (
+                            <p className="text-gray-400">لا توجد مواصفات</p>
+                          )}
+                        </div>
 
                         {/* Price and Stock */}
                         <div className="flex items-center justify-between">
-                          {/* MSRP Price */}
+                          {/* Price */}
                           <div>
                             <span className="text-2xl font-bold" style={{ color: '#BA5183' }}>
-                              {product.msrpPrice.toFixed(2)} ر.س
+                              {product.price.toFixed(2)} ر.س
                             </span>
                           </div>
 

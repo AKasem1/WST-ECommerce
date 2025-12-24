@@ -33,7 +33,8 @@ export default function ProductsSection() {
   }, []);
 
   const handleWhatsApp = (product: ProductResponse) => {
-    const message = `مرحباً، أنا مهتم بالمنتج: ${product.modelNumber}\n${product.productDescription}`;
+    const specs = product.productSpecs?.join('\n') || '';
+    const message = `مرحباً، أنا مهتم بالمنتج: ${product.modelNumber}\n${specs}`;
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -94,13 +95,14 @@ export default function ProductsSection() {
           >
             {products.map((product, index) => (
               <SwiperSlide key={product._id}>
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-2xl transition-shadow duration-300 my-10 mx-2"
-                >
+                <Link href={`/products/${product.slug}`}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-2xl transition-shadow duration-300 my-10 mx-2 cursor-pointer"
+                  >
                   {/* Product Image */}
                   <div className="relative h-48 overflow-hidden bg-gray-100">
                     <Image
@@ -121,20 +123,31 @@ export default function ProductsSection() {
                       {product.modelNumber}
                     </h3>
 
-                    {/* Description */}
-                    <p className="text-sm text-gray-600 line-clamp-2 min-h-[40px]">
-                      {product.productDescription}
-                    </p>
+                    {/* Specs */}
+                    <div className="text-sm text-gray-600 min-h-[40px]">
+                      {product.productSpecs && product.productSpecs.length > 0 ? (
+                        <ul className="list-disc list-inside space-y-1">
+                          {product.productSpecs.slice(0, 2).map((spec, idx) => (
+                            <li key={idx} className="line-clamp-1">{spec}</li>
+                          ))}
+                          {product.productSpecs.length > 2 && (
+                            <li className="text-gray-400 text-xs">+{product.productSpecs.length - 2} المزيد</li>
+                          )}
+                        </ul>
+                      ) : (
+                        <p className="text-gray-400">لا توجد مواصفات</p>
+                      )}
+                    </div>
 
                     {/* Price and Stock */}
                     <div className="flex items-center justify-between">
-                      {/* MSRP Price */}
+                      {/* Price */}
                       <div>
                         <span
                           className="text-2xl font-bold"
                           style={{ color: '#BA5183' }}
                         >
-                          {product.msrpPrice.toFixed(2)} ر.س
+                          {product.price.toFixed(2)} ر.س
                         </span>
                       </div>
 
@@ -150,11 +163,13 @@ export default function ProductsSection() {
                       </div>
                     </div>
 
-                    {/* WhatsApp Button */}
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => handleWhatsApp(product)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleWhatsApp(product);
+                      }}
                       className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-semibold text-white transition-all duration-300"
                       style={{ backgroundColor: '#25D366' }}
                     >
@@ -168,7 +183,8 @@ export default function ProductsSection() {
                       <span>تواصل عبر واتساب</span>
                     </motion.button>
                   </div>
-                </motion.div>
+                  </motion.div>
+                </Link>
               </SwiperSlide>
             ))}
           </Swiper>

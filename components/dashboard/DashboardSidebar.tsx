@@ -9,6 +9,8 @@ const navItems = [
   { name: 'الفئات', href: '/dashboard/categories', icon: '📁' },
   { name: 'المنتجات', href: '/dashboard/products', icon: '📦' },
   { name: 'الخدمات', href: '/dashboard/services', icon: '⚙️' },
+  { name: 'البرامج', href: '/dashboard/programs', icon: '💻' },
+  { name: 'الاستفسارات', href: '/dashboard/inquiries', icon: '📧' },
 ];
 
 export default function DashboardSidebar() {

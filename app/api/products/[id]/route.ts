@@ -32,11 +32,12 @@ export async function GET(
       _id: product._id.toString(),
       modelNumber: product.modelNumber,
       productImage: product.productImage,
-      productDescription: product.productDescription,
+      slug: product.slug,
+      productSpecs: product.productSpecs,
       quantity: product.quantity,
-      msrpPrice: product.msrpPrice,
-      dppPrice: product.dppPrice,
+      price: product.price,
       categoryId: product.categoryId,
+      visibility: product.visibility,
       createdAt: product.createdAt,
       updatedAt: product.updatedAt,
     };
@@ -77,12 +78,9 @@ export async function PUT(
       );
     }
 
-    if (
-      (body.msrpPrice !== undefined && body.msrpPrice < 0) ||
-      (body.dppPrice !== undefined && body.dppPrice < 0)
-    ) {
+    if (body.price !== undefined && body.price < 0) {
       return NextResponse.json(
-        { error: 'Prices must be greater than or equal to 0' },
+        { error: 'Price must be greater than or equal to 0' },
         { status: 400 }
       );
     }
@@ -117,11 +115,12 @@ export async function PUT(
       _id: product._id.toString(),
       modelNumber: product.modelNumber,
       productImage: product.productImage,
-      productDescription: product.productDescription,
+      slug: product.slug,
+      productSpecs: product.productSpecs,
       quantity: product.quantity,
-      msrpPrice: product.msrpPrice,
-      dppPrice: product.dppPrice,
+      price: product.price,
       categoryId: product.categoryId,
+      visibility: product.visibility,
       createdAt: product.createdAt,
       updatedAt: product.updatedAt,
     };

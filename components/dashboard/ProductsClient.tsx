@@ -28,19 +28,19 @@ export default function ProductsClient({ initialProducts, categories }: Products
   // Form state
   const [formData, setFormData] = useState({
     modelNumber: '',
-    productDescription: '',
+    productSpecs: [''],
     quantity: '',
-    msrpPrice: '',
-    dppPrice: '',
+    price: '',
     categoryId: '',
     productImage: '',
+    visibility: true,
   });
 
   // Filter products
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.modelNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.productDescription.toLowerCase().includes(searchTerm.toLowerCase());
+      product.productSpecs.some(spec => spec.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = !categoryFilter || product.categoryId.toString() === categoryFilter;
     return matchesSearch && matchesCategory;
   });
@@ -49,12 +49,12 @@ export default function ProductsClient({ initialProducts, categories }: Products
   const resetForm = () => {
     setFormData({
       modelNumber: '',
-      productDescription: '',
+      productSpecs: [''],
       quantity: '',
-      msrpPrice: '',
-      dppPrice: '',
+      price: '',
       categoryId: '',
       productImage: '',
+      visibility: true,
     });
     setImageFile(null);
     setImagePreview('');
@@ -100,11 +100,11 @@ export default function ProductsClient({ initialProducts, categories }: Products
             {
               modelNumber: formData.modelNumber,
               productImage: imageUrl,
-              productDescription: formData.productDescription,
+              productSpecs: formData.productSpecs.filter(spec => spec.trim() !== ''),
               quantity: parseInt(formData.quantity),
-              msrpPrice: parseFloat(formData.msrpPrice),
-              dppPrice: parseFloat(formData.dppPrice),
+              price: parseFloat(formData.price),
               categoryId: formData.categoryId,
+              visibility: formData.visibility,
             },
           ],
         }),
@@ -153,11 +153,11 @@ export default function ProductsClient({ initialProducts, categories }: Products
         body: JSON.stringify({
           modelNumber: formData.modelNumber,
           productImage: imageUrl,
-          productDescription: formData.productDescription,
+          productSpecs: formData.productSpecs.filter(spec => spec.trim() !== ''),
           quantity: parseInt(formData.quantity),
-          msrpPrice: parseFloat(formData.msrpPrice),
-          dppPrice: parseFloat(formData.dppPrice),
+          price: parseFloat(formData.price),
           categoryId: formData.categoryId,
+          visibility: formData.visibility,
         }),
       });
 
@@ -208,12 +208,12 @@ export default function ProductsClient({ initialProducts, categories }: Products
     setSelectedProduct(product);
     setFormData({
       modelNumber: product.modelNumber,
-      productDescription: product.productDescription,
+      productSpecs: product.productSpecs.length > 0 ? product.productSpecs : [''],
       quantity: product.quantity.toString(),
-      msrpPrice: product.msrpPrice.toString(),
-      dppPrice: product.dppPrice.toString(),
+      price: product.price.toString(),
       categoryId: product.categoryId.toString(),
       productImage: product.productImage,
+      visibility: product.visibility,
     });
     setImagePreview(product.productImage);
     setIsEditModalOpen(true);
@@ -247,7 +247,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      {/* <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
             type="text"
@@ -271,7 +271,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
             ))}
           </select>
         </div>
-      </div>
+      </div> */}
 
       {/* Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -286,7 +286,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
                   رقم الموديل
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                  الوصف
+                  المواصفات
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
                   الفئة
@@ -298,6 +298,9 @@ export default function ProductsClient({ initialProducts, categories }: Products
                   السعر
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                  الحالة
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
                   الإجراءات
                 </th>
               </tr>
@@ -305,7 +308,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
             <tbody className="divide-y divide-gray-200">
               {filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={8} className="px-6 py-8 text-center text-gray-500">
                     لا توجد منتجات
                   </td>
                 </tr>
@@ -322,8 +325,15 @@ export default function ProductsClient({ initialProducts, categories }: Products
                     <td className="px-6 py-4 text-sm font-medium text-gray-900">
                       {product.modelNumber}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
-                      {product.productDescription}
+                    <td className="px-6 py-4 text-sm text-gray-600 max-w-xs">
+                      <ul className="list-disc list-inside space-y-1">
+                        {product.productSpecs.slice(0, 2).map((spec, idx) => (
+                          <li key={idx} className="truncate">{spec}</li>
+                        ))}
+                        {product.productSpecs.length > 2 && (
+                          <li className="text-gray-400">+{product.productSpecs.length - 2} المزيد</li>
+                        )}
+                      </ul>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-600">
                       {getCategoryName(product.categoryId)}
@@ -332,7 +342,14 @@ export default function ProductsClient({ initialProducts, categories }: Products
                       {product.quantity}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900">
-                      ${product.msrpPrice}
+                      ${product.price.toFixed(2)}
+                    </td>
+                    <td className="px-6 py-4 text-sm">
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        product.visibility ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}>
+                        {product.visibility ? 'ظاهر' : 'مخفي'}
+                      </span>
                     </td>
                     <td className="px-6 py-4 text-sm">
                       <div className="flex gap-2">
@@ -382,15 +399,45 @@ export default function ProductsClient({ initialProducts, categories }: Products
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              الوصف
+              المواصفات
             </label>
-            <textarea
-              required
-              value={formData.productDescription}
-              onChange={(e) => setFormData({ ...formData, productDescription: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
-              rows={3}
-            />
+            <div className="space-y-2">
+              {formData.productSpecs.map((spec, index) => (
+                <div key={index} className="flex gap-2">
+                  <input
+                    type="text"
+                    required={index === 0}
+                    value={spec}
+                    onChange={(e) => {
+                      const newSpecs = [...formData.productSpecs];
+                      newSpecs[index] = e.target.value;
+                      setFormData({ ...formData, productSpecs: newSpecs });
+                    }}
+                    placeholder={`مواصفة ${index + 1}`}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
+                  />
+                  {index > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newSpecs = formData.productSpecs.filter((_, i) => i !== index);
+                        setFormData({ ...formData, productSpecs: newSpecs });
+                      }}
+                      className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    >
+                      حذف
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, productSpecs: [...formData.productSpecs, ''] })}
+                className="w-full px-3 py-2 text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors"
+              >
+                + إضافة مواصفة
+              </button>
+            </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -442,31 +489,33 @@ export default function ProductsClient({ initialProducts, categories }: Products
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                سعر MSRP
+                السعر
               </label>
               <input
                 type="number"
                 required
                 min="0"
                 step="0.01"
-                value={formData.msrpPrice}
-                onChange={(e) => setFormData({ ...formData, msrpPrice: e.target.value })}
+                value={formData.price}
+                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                سعر DPP
+                الحالة
               </label>
-              <input
-                type="number"
-                required
-                min="0"
-                step="0.01"
-                value={formData.dppPrice}
-                onChange={(e) => setFormData({ ...formData, dppPrice: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
-              />
+              <div className="flex items-center h-full">
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.visibility}
+                    onChange={(e) => setFormData({ ...formData, visibility: e.target.checked })}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <span className="mr-2 text-sm text-gray-700">ظاهر للعملاء</span>
+                </label>
+              </div>
             </div>
           </div>
           <div className="flex gap-3 pt-4">
@@ -516,15 +565,45 @@ export default function ProductsClient({ initialProducts, categories }: Products
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              الوصف
+              المواصفات
             </label>
-            <textarea
-              required
-              value={formData.productDescription}
-              onChange={(e) => setFormData({ ...formData, productDescription: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
-              rows={3}
-            />
+            <div className="space-y-2">
+              {formData.productSpecs.map((spec, index) => (
+                <div key={index} className="flex gap-2">
+                  <input
+                    type="text"
+                    required={index === 0}
+                    value={spec}
+                    onChange={(e) => {
+                      const newSpecs = [...formData.productSpecs];
+                      newSpecs[index] = e.target.value;
+                      setFormData({ ...formData, productSpecs: newSpecs });
+                    }}
+                    placeholder={`مواصفة ${index + 1}`}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
+                  />
+                  {index > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newSpecs = formData.productSpecs.filter((_, i) => i !== index);
+                        setFormData({ ...formData, productSpecs: newSpecs });
+                      }}
+                      className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    >
+                      حذف
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, productSpecs: [...formData.productSpecs, ''] })}
+                className="w-full px-3 py-2 text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors"
+              >
+                + إضافة مواصفة
+              </button>
+            </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -576,31 +655,33 @@ export default function ProductsClient({ initialProducts, categories }: Products
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                سعر MSRP
+                السعر
               </label>
               <input
                 type="number"
                 required
                 min="0"
                 step="0.01"
-                value={formData.msrpPrice}
-                onChange={(e) => setFormData({ ...formData, msrpPrice: e.target.value })}
+                value={formData.price}
+                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                سعر DPP
+                الحالة
               </label>
-              <input
-                type="number"
-                required
-                min="0"
-                step="0.01"
-                value={formData.dppPrice}
-                onChange={(e) => setFormData({ ...formData, dppPrice: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
-              />
+              <div className="flex items-center h-full">
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.visibility}
+                    onChange={(e) => setFormData({ ...formData, visibility: e.target.checked })}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <span className="mr-2 text-sm text-gray-700">ظاهر للعملاء</span>
+                </label>
+              </div>
             </div>
           </div>
           <div className="flex gap-3 pt-4">

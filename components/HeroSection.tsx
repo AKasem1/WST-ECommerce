@@ -5,10 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
 const heroImages = [
-  '/images/hero/bg-1.jpg',
-  '/images/hero/bg-2.jpeg',
-  '/images/hero/bg-3.jpeg',
-  '/images/hero/bg-4.jpeg',
+  '/images/hero/carousel/1.jpeg',
+  '/images/hero/carousel/2.jpeg',
+  '/images/hero/carousel/3.jpeg',
+  '/images/hero/carousel/4.png',
+  '/images/hero/carousel/5.png',
 ];
 
 export default function HeroSection() {
@@ -32,7 +33,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative w-full h-screen overflow-hidden">
+    <section className="relative w-full h-[80vh] overflow-hidden">
       {/* Background Image Carousel */}
       <AnimatePresence mode="wait">
         <motion.div
@@ -47,7 +48,7 @@ export default function HeroSection() {
             src={heroImages[currentIndex]}
             alt={`Hero background ${currentIndex + 1}`}
             fill
-            className="object-cover"
+            className="object-contain"
             priority={currentIndex === 0}
             sizes="100vw"
           />
