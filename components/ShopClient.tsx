@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import type { ProductResponse } from '@/types/product';
 import type { CategoryResponse } from '@/types/category-api';
+import type { ProgramResponse } from '@/types/program';
 
 interface ShopClientProps {
   initialProducts: ProductResponse[];
@@ -22,15 +24,19 @@ export default function ShopClient({
   const categoryFromUrl = searchParams.get('category');
   
   const [products, setProducts] = useState<ProductResponse[]>(initialProducts);
+  const [programs, setPrograms] = useState<ProgramResponse[]>([]);
   const [categories] = useState<CategoryResponse[]>(initialCategories);
   const [selectedCategory, setSelectedCategory] = useState<string>(categoryFromUrl || 'all');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalProducts, setTotalProducts] = useState(initialTotal);
   const [totalAllProducts, setTotalAllProducts] = useState(initialTotal);
+  const [totalPrograms, setTotalPrograms] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const productsPerPage = 10;
-  const totalPages = Math.ceil(totalProducts / productsPerPage);
+  const totalPages = Math.ceil(
+    selectedCategory === 'programs' ? totalPrograms : totalProducts, 
+  ) / productsPerPage;
 
   // Update selected category when URL parameter changes
   useEffect(() => {
@@ -44,8 +50,26 @@ export default function ShopClient({
   }, [categoryFromUrl]);
 
   useEffect(() => {
-    fetchProducts();
+    if (selectedCategory === 'programs') {
+      fetchPrograms();
+    } else {
+      fetchProducts();
+    }
   }, [currentPage, selectedCategory]);
+
+  // Fetch total programs count on mount
+  useEffect(() => {
+    const fetchProgramsCount = async () => {
+      try {
+        const response = await fetch('/api/programs?page=1&limit=1');
+        const data = await response.json();
+        setTotalPrograms(data.pagination?.total || 0);
+      } catch (error) {
+        console.error('Error fetching programs count:', error);
+      }
+    };
+    fetchProgramsCount();
+  }, []);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -73,6 +97,22 @@ export default function ShopClient({
     }
   };
 
+  const fetchPrograms = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `/api/programs?page=${currentPage}&limit=${productsPerPage}`
+      );
+      const data = await response.json();
+      setPrograms(data.programs || []);
+      setTotalPrograms(data.pagination?.total || 0);
+    } catch (error) {
+      console.error('Error fetching programs:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleCategoryChange = (categoryId: string) => {
     setSelectedCategory(categoryId);
     setCurrentPage(1);
@@ -84,6 +124,11 @@ export default function ShopClient({
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
+
+  const isShowingPrograms = selectedCategory === 'programs';
+  const currentTotalPages = Math.ceil(
+    (isShowingPrograms ? totalPrograms : totalProducts) / productsPerPage
+  );
 
   return (
     <div className="min-h-screen bg-gray-50" dir="rtl">
@@ -119,7 +164,7 @@ export default function ShopClient({
                 {/* All Products */}
                 <button
                   onClick={() => handleCategoryChange('all')}
-                  className={`w-full text-right px-4 py-3 rounded-lg transition-all duration-300 ${
+                  className={`w-full text-right px-4 py-3 rounded-lg transition-all duration-300 cursor-pointer ${
                     selectedCategory === 'all'
                       ? 'text-white font-semibold'
                       : 'text-gray-700 hover:bg-gray-100'
@@ -136,7 +181,7 @@ export default function ShopClient({
                   <button
                     key={category._id}
                     onClick={() => handleCategoryChange(category._id)}
-                    className={`w-full text-right px-4 py-3 rounded-lg transition-all duration-300 ${
+                    className={`w-full text-right px-4 py-3 rounded-lg transition-all duration-300 cursor-pointer ${
                       selectedCategory === category._id
                         ? 'text-white font-semibold'
                         : 'text-gray-700 hover:bg-gray-100'
@@ -149,16 +194,167 @@ export default function ShopClient({
                     {category.name}
                   </button>
                 ))}
+
+                {/* Programs Category */}
+                <div className="border-t border-gray-200 pt-2 mt-2">
+                  <button
+                    onClick={() => handleCategoryChange('programs')}
+                    className={`w-full text-right px-4 py-3 rounded-lg transition-all duration-300 cursor-pointer ${
+                      selectedCategory === 'programs'
+                        ? 'text-white font-semibold'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                    style={{
+                      backgroundColor: selectedCategory === 'programs' ? '#382A67' : 'transparent',
+                    }}
+                  >
+                    البرامج المحاسبية ({totalPrograms})
+                  </button>
+                </div>
               </div>
             </div>
           </motion.aside>
 
-          {/* Main Content - Products Grid */}
+          {/* Main Content - Products/Programs Grid */}
           <div className="flex-1">
             {loading ? (
               <div className="flex justify-center items-center h-64">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
               </div>
+            ) : isShowingPrograms ? (
+              // Programs Grid
+              programs.length === 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-center py-20"
+                >
+                  <p className="text-xl text-gray-600">لا توجد برامج</p>
+                </motion.div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+                    {programs.map((program, index) => (
+                      <Link href={`/programs/${program.slug}`} key={program._id}>
+                        <motion.div
+                          initial={{ opacity: 0, y: 30 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: index * 0.05 }}
+                          className="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-2xl transition-shadow duration-300 cursor-pointer border-2"
+                          style={{ borderColor: '#BA5183' }}
+                        >
+                          {/* Program Image */}
+                          <div className="relative h-48 overflow-hidden bg-gray-100">
+                            <Image
+                              src={program.programImage}
+                              alt={program.name}
+                              fill
+                              className="object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                            {/* Free/Paid Badge */}
+                            {/* <div className="absolute top-3 right-3">
+                              <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                                program.isFree ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'
+                              }`}>
+                                {program.isFree ? 'مجاني' : 'مدفوع'}
+                              </span>
+                            </div> */}
+                          </div>
+
+                          {/* Program Info */}
+                          <div className="p-4 space-y-3">
+                            {/* Program Name */}
+                            <h3 className="font-bold text-lg truncate" style={{ color: '#382A67' }}>
+                              {program.name}
+                            </h3>
+                            {program.nameEn && (
+                              <p className="text-sm text-gray-500 truncate">{program.nameEn}</p>
+                            )}
+
+                            {/* Short Description */}
+                            {program.shortDescription && (
+                              <p className="text-sm text-gray-600 line-clamp-2">
+                                {program.shortDescription}
+                              </p>
+                            )}
+
+                            {/* Platforms */}
+                            {program.platforms && program.platforms.length > 0 && (
+                              <div className="flex flex-wrap gap-1">
+                                {program.platforms.slice(0, 3).map((platform, idx) => (
+                                  <span 
+                                    key={idx} 
+                                    className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs"
+                                  >
+                                    {platform}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* View Button */}
+                            <button
+                              className="w-full py-2.5 rounded-lg font-semibold text-white transition-all duration-300"
+                              style={{ backgroundColor: '#BA5183' }}
+                            >
+                              عرض التفاصيل
+                            </button>
+                          </div>
+                        </motion.div>
+                      </Link>
+                    ))}
+                  </div>
+
+                  {/* Pagination for Programs */}
+                  {currentTotalPages > 1 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6 }}
+                      className="flex justify-center items-center gap-2 flex-wrap"
+                    >
+                      <button
+                        onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                        disabled={currentPage === 1}
+                        className="px-4 py-2 rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        style={{
+                          backgroundColor: currentPage === 1 ? '#E5E7EB' : '#BA5183',
+                          color: currentPage === 1 ? '#9CA3AF' : 'white',
+                        }}
+                      >
+                        السابق
+                      </button>
+
+                      {Array.from({ length: currentTotalPages }, (_, i) => i + 1).map((page) => (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className={`w-10 h-10 rounded-lg font-semibold transition-all duration-300 ${
+                            currentPage === page ? 'text-white' : 'text-gray-700 hover:bg-gray-200'
+                          }`}
+                          style={{
+                            backgroundColor: currentPage === page ? '#BA5183' : 'white',
+                          }}
+                        >
+                          {page}
+                        </button>
+                      ))}
+
+                      <button
+                        onClick={() => setCurrentPage((prev) => Math.min(currentTotalPages, prev + 1))}
+                        disabled={currentPage === currentTotalPages}
+                        className="px-4 py-2 rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        style={{
+                          backgroundColor: currentPage === currentTotalPages ? '#E5E7EB' : '#BA5183',
+                          color: currentPage === currentTotalPages ? '#9CA3AF' : 'white',
+                        }}
+                      >
+                        التالي
+                      </button>
+                    </motion.div>
+                  )}
+                </>
+              )
             ) : products.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -254,7 +450,7 @@ export default function ShopClient({
                 </div>
 
                 {/* Pagination */}
-                {totalPages > 1 && (
+                {currentTotalPages > 1 && (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -275,7 +471,7 @@ export default function ShopClient({
                     </button>
 
                     {/* Page Numbers */}
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    {Array.from({ length: currentTotalPages }, (_, i) => i + 1).map((page) => (
                       <button
                         key={page}
                         onClick={() => setCurrentPage(page)}
@@ -292,12 +488,12 @@ export default function ShopClient({
 
                     {/* Next Button */}
                     <button
-                      onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-                      disabled={currentPage === totalPages}
+                      onClick={() => setCurrentPage((prev) => Math.min(currentTotalPages, prev + 1))}
+                      disabled={currentPage === currentTotalPages}
                       className="px-4 py-2 rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{
-                        backgroundColor: currentPage === totalPages ? '#E5E7EB' : '#382A67',
-                        color: currentPage === totalPages ? '#9CA3AF' : 'white',
+                        backgroundColor: currentPage === currentTotalPages ? '#E5E7EB' : '#382A67',
+                        color: currentPage === currentTotalPages ? '#9CA3AF' : 'white',
                       }}
                     >
                       التالي
@@ -312,3 +508,4 @@ export default function ShopClient({
     </div>
   );
 }
+

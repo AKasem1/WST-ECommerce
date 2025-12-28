@@ -5,6 +5,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { ProductResponse } from '@/types/product';
 
+// Accent color (previous title color) - used for borders and decorative shapes
+const ACCENT_COLOR = '#382A67';
+const TITLE_COLOR = '#BA5183'; // --color-bg-primary
+
 interface ProductDetailClientProps {
   product: ProductResponse;
 }
@@ -18,9 +22,12 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   };
 
   return (
-    <div className="min-h-screen bg-gray-50" dir="rtl">
+    <div className="min-h-screen bg-white" dir="rtl">
       {/* Hero Section */}
-      <section className="relative py-20 bg-linear-to-br from-purple-900 to-indigo-900 text-white">
+      <section 
+        className="relative py-20 text-white"
+        style={{ background: `linear-gradient(135deg, ${ACCENT_COLOR} 0%, ${TITLE_COLOR} 100%)` }}
+      >
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -34,7 +41,8 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="relative aspect-square rounded-2xl overflow-hidden shadow-2xl"
+                className="relative aspect-square rounded-2xl overflow-hidden shadow-2xl border-4"
+                style={{ borderColor: 'rgba(255,255,255,0.3)' }}
               >
                 <Image
                   src={product.productImage}
@@ -102,15 +110,22 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="bg-white rounded-2xl p-8 shadow-lg"
+                className="bg-white rounded-2xl p-8 shadow-lg border-2"
+                style={{ borderColor: ACCENT_COLOR }}
               >
-                <h2 className="text-3xl font-bold mb-6" style={{ color: '#382A67' }}>
-                  مواصفات المنتج
-                </h2>
+                <div className="relative inline-block mb-6">
+                  <div 
+                    className="absolute -inset-x-4 -inset-y-2 rounded-full opacity-15"
+                    style={{ backgroundColor: ACCENT_COLOR }}
+                  />
+                  <h2 className="relative text-3xl font-bold" style={{ color: TITLE_COLOR }}>
+                    مواصفات المنتج
+                  </h2>
+                </div>
                 <ul className="grid md:grid-cols-2 gap-4">
                   {product.productSpecs.map((spec, idx) => (
                     <li key={idx} className="flex items-start gap-3">
-                      <span className="text-green-500 text-xl mt-1">✓</span>
+                      <span className="text-xl mt-1" style={{ color: ACCENT_COLOR }}>✓</span>
                       <span className="text-gray-700">{spec}</span>
                     </li>
                   ))}
@@ -124,11 +139,18 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="bg-white rounded-2xl p-8 shadow-lg"
+              className="bg-white rounded-2xl p-8 shadow-lg border-2"
+              style={{ borderColor: ACCENT_COLOR }}
             >
-              <h2 className="text-3xl font-bold mb-6" style={{ color: '#382A67' }}>
-                تفاصيل المنتج
-              </h2>
+              <div className="relative inline-block mb-6">
+                <div 
+                  className="absolute -inset-x-4 -inset-y-2 rounded-full opacity-15"
+                  style={{ backgroundColor: ACCENT_COLOR }}
+                />
+                <h2 className="relative text-3xl font-bold" style={{ color: TITLE_COLOR }}>
+                  تفاصيل المنتج
+                </h2>
+              </div>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">رقم الموديل:</h3>
@@ -136,7 +158,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">السعر:</h3>
-                  <p className="text-2xl font-bold" style={{ color: '#BA5183' }}>
+                  <p className="text-2xl font-bold" style={{ color: TITLE_COLOR }}>
                     {product.price.toFixed(2)} ر.س
                   </p>
                 </div>
@@ -157,7 +179,8 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             <div className="text-center">
               <Link
                 href="/"
-                className="inline-block px-8 py-4 bg-purple-900 text-white rounded-lg font-bold hover:bg-purple-800 transition-colors"
+                className="inline-block px-8 py-4 text-white rounded-lg font-bold hover:opacity-90 transition-opacity"
+                style={{ backgroundColor: ACCENT_COLOR }}
               >
                 العودة للرئيسية
               </Link>
@@ -168,3 +191,4 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
     </div>
   );
 }
+

@@ -5,15 +5,22 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { ProgramResponse } from '@/types/program';
 
+// Accent color for decorative elements
+const ACCENT_COLOR = '#BA5183';
+const PRIMARY_COLOR = '#382A67';
+
 interface ProgramDetailClientProps {
   program: ProgramResponse;
 }
 
 export default function ProgramDetailClient({ program }: ProgramDetailClientProps) {
   return (
-    <div className="min-h-screen bg-gray-50" dir="rtl">
+    <div className="min-h-screen bg-white" dir="rtl">
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-purple-900 to-indigo-900 text-white">
+      <section 
+        className="relative py-20 text-white"
+        style={{ background: `linear-gradient(135deg, ${PRIMARY_COLOR} 0%, ${ACCENT_COLOR} 100%)` }}
+      >
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -27,7 +34,8 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="relative aspect-square rounded-2xl overflow-hidden shadow-2xl"
+                className="relative aspect-square rounded-2xl overflow-hidden shadow-2xl border-4"
+                style={{ borderColor: 'rgba(255,255,255,0.3)' }}
               >
                 <Image
                   src={program.programImage}
@@ -55,11 +63,11 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
 
                 {/* Badges */}
                 <div className="flex flex-wrap gap-3">
-                  <span className={`px-4 py-2 rounded-full font-bold ${
+                  {/* <span className={`px-4 py-2 rounded-full font-bold ${
                     program.isFree ? 'bg-green-500' : 'bg-blue-500'
                   }`}>
                     {program.isFree ? 'مجاني' : 'مدفوع'}
-                  </span>
+                  </span> */}
                   {program.supportsOffline && (
                     <span className="px-4 py-2 rounded-full bg-yellow-500 text-gray-900 font-bold">
                       يعمل بدون إنترنت
@@ -136,11 +144,18 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="bg-white rounded-2xl p-8 shadow-lg"
+                className="bg-white rounded-2xl p-8 shadow-lg border-2"
+                style={{ borderColor: ACCENT_COLOR }}
               >
-                <h2 className="text-3xl font-bold mb-4" style={{ color: '#382A67' }}>
-                  نبذة عن البرنامج
-                </h2>
+                <div className="relative inline-block mb-6">
+                  <div 
+                    className="absolute -inset-x-4 -inset-y-2 rounded-full opacity-15"
+                    style={{ backgroundColor: ACCENT_COLOR }}
+                  />
+                  <h2 className="relative text-3xl font-bold" style={{ color: PRIMARY_COLOR }}>
+                    نبذة عن البرنامج
+                  </h2>
+                </div>
                 <p className="text-gray-700 leading-relaxed whitespace-pre-line">
                   {program.fullDescription}
                 </p>
@@ -154,15 +169,22 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="bg-white rounded-2xl p-8 shadow-lg"
+                className="bg-white rounded-2xl p-8 shadow-lg border-2"
+                style={{ borderColor: ACCENT_COLOR }}
               >
-                <h2 className="text-3xl font-bold mb-6" style={{ color: '#382A67' }}>
-                  المميزات الرئيسية
-                </h2>
+                <div className="relative inline-block mb-6">
+                  <div 
+                    className="absolute -inset-x-4 -inset-y-2 rounded-full opacity-15"
+                    style={{ backgroundColor: ACCENT_COLOR }}
+                  />
+                  <h2 className="relative text-3xl font-bold" style={{ color: PRIMARY_COLOR }}>
+                    المميزات الرئيسية
+                  </h2>
+                </div>
                 <ul className="grid md:grid-cols-2 gap-4">
                   {program.mainFeatures.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3">
-                      <span className="text-green-500 text-xl mt-1">✓</span>
+                      <span className="text-xl mt-1" style={{ color: ACCENT_COLOR }}>✓</span>
                       <span className="text-gray-700">{feature}</span>
                     </li>
                   ))}
@@ -177,14 +199,25 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="bg-white rounded-2xl p-8 shadow-lg"
+                className="bg-white rounded-2xl p-8 shadow-lg border-2"
+                style={{ borderColor: ACCENT_COLOR }}
               >
-                <h2 className="text-3xl font-bold mb-6" style={{ color: '#382A67' }}>
-                  الأنشطة المدعومة
-                </h2>
+                <div className="relative inline-block mb-6">
+                  <div 
+                    className="absolute -inset-x-4 -inset-y-2 rounded-full opacity-15"
+                    style={{ backgroundColor: ACCENT_COLOR }}
+                  />
+                  <h2 className="relative text-3xl font-bold" style={{ color: PRIMARY_COLOR }}>
+                    الأنشطة المدعومة
+                  </h2>
+                </div>
                 <div className="flex flex-wrap gap-3">
                   {program.supportedActivities.map((activity, idx) => (
-                    <span key={idx} className="px-4 py-2 bg-purple-100 text-purple-900 rounded-lg font-semibold">
+                    <span 
+                      key={idx} 
+                      className="px-4 py-2 rounded-lg font-semibold"
+                      style={{ backgroundColor: `${ACCENT_COLOR}20`, color: PRIMARY_COLOR }}
+                    >
                       {activity}
                     </span>
                   ))}
@@ -199,11 +232,18 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="bg-white rounded-2xl p-8 shadow-lg"
+                className="bg-white rounded-2xl p-8 shadow-lg border-2"
+                style={{ borderColor: ACCENT_COLOR }}
               >
-                <h2 className="text-3xl font-bold mb-6" style={{ color: '#382A67' }}>
-                  متطلبات التشغيل
-                </h2>
+                <div className="relative inline-block mb-6">
+                  <div 
+                    className="absolute -inset-x-4 -inset-y-2 rounded-full opacity-15"
+                    style={{ backgroundColor: ACCENT_COLOR }}
+                  />
+                  <h2 className="relative text-3xl font-bold" style={{ color: PRIMARY_COLOR }}>
+                    متطلبات التشغيل
+                  </h2>
+                </div>
                 <div className="grid md:grid-cols-2 gap-6">
                   {program.systemRequirements.os && program.systemRequirements.os.length > 0 && (
                     <div>
@@ -244,28 +284,39 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="bg-white rounded-2xl p-8 shadow-lg"
+                className="bg-white rounded-2xl p-8 shadow-lg border-2"
+                style={{ borderColor: ACCENT_COLOR }}
               >
-                <h2 className="text-3xl font-bold mb-6" style={{ color: '#382A67' }}>
-                  التسعير
-                </h2>
+                <div className="relative inline-block mb-6">
+                  <div 
+                    className="absolute -inset-x-4 -inset-y-2 rounded-full opacity-15"
+                    style={{ backgroundColor: ACCENT_COLOR }}
+                  />
+                  <h2 className="relative text-3xl font-bold" style={{ color: PRIMARY_COLOR }}>
+                    التسعير
+                  </h2>
+                </div>
                 {program.basePrice && (
-                  <div className="text-4xl font-bold text-purple-900 mb-4">
+                  <div className="text-4xl font-bold mb-4" style={{ color: PRIMARY_COLOR }}>
                     ${program.basePrice}
                   </div>
                 )}
                 {program.hasSubscription && program.subscriptionPackages && program.subscriptionPackages.length > 0 && (
                   <div className="grid md:grid-cols-3 gap-4 mt-6">
                     {program.subscriptionPackages.map((pkg, idx) => (
-                      <div key={idx} className="border-2 border-purple-200 rounded-lg p-4">
+                      <div 
+                        key={idx} 
+                        className="border-2 rounded-lg p-4"
+                        style={{ borderColor: ACCENT_COLOR }}
+                      >
                         <h4 className="font-bold text-lg mb-2">{pkg.name}</h4>
-                        <p className="text-3xl font-bold text-purple-900 mb-2">${pkg.price}</p>
+                        <p className="text-3xl font-bold mb-2" style={{ color: PRIMARY_COLOR }}>${pkg.price}</p>
                         <p className="text-sm text-gray-600">{pkg.duration}</p>
                         {pkg.features && (
                           <ul className="mt-4 space-y-2 text-sm">
                             {pkg.features.map((feature, fIdx) => (
                               <li key={fIdx} className="flex items-start gap-2">
-                                <span className="text-green-500">✓</span>
+                                <span style={{ color: ACCENT_COLOR }}>✓</span>
                                 <span>{feature}</span>
                               </li>
                             ))}
@@ -282,7 +333,8 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
             <div className="text-center">
               <Link
                 href="/"
-                className="inline-block px-8 py-4 bg-purple-900 text-white rounded-lg font-bold hover:bg-purple-800 transition-colors"
+                className="inline-block px-8 py-4 text-white rounded-lg font-bold hover:opacity-90 transition-opacity"
+                style={{ backgroundColor: PRIMARY_COLOR }}
               >
                 العودة للرئيسية
               </Link>
@@ -293,3 +345,4 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
     </div>
   );
 }
+

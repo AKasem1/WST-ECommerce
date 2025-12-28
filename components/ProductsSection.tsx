@@ -12,6 +12,9 @@ import 'swiper/css/pagination';
 import '@/app/swiper-custom.css';
 import type { ProductResponse } from '@/types/product';
 
+// Accent color (previous title color) - used for borders and decorative shapes
+const ACCENT_COLOR = '#382A67';
+
 export default function ProductsSection() {
   const [products, setProducts] = useState<ProductResponse[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,7 +44,7 @@ export default function ProductsSection() {
 
   if (loading) {
     return (
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
@@ -52,9 +55,9 @@ export default function ProductsSection() {
   }
 
   return (
-    <section className="py-20 bg-gray-50" dir="rtl">
+    <section className="py-20 bg-white" dir="rtl">
       <div className="container mx-auto px-4">
-        {/* Section Title */}
+        {/* Section Title with Modern Shape */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -62,12 +65,39 @@ export default function ProductsSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2
-            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"
-            style={{ color: '#382A67' }}
-          >
-            منتجاتنا
-          </h2>
+          <div className="flex justify-center mb-4">
+            <div className="relative inline-block">
+              {/* Decorative shape behind title */}
+              <div 
+                className="absolute -inset-x-8 -inset-y-3 md:-inset-x-12 md:-inset-y-4 rounded-full opacity-15"
+                style={{ backgroundColor: ACCENT_COLOR }}
+              />
+              {/* Decorative accent lines */}
+              <div 
+                className="absolute -left-16 md:-left-24 top-1/2 -translate-y-1/2 w-8 md:w-16 h-1 rounded-full"
+                style={{ backgroundColor: ACCENT_COLOR }}
+              />
+              <div 
+                className="absolute -right-16 md:-right-24 top-1/2 -translate-y-1/2 w-8 md:w-16 h-1 rounded-full"
+                style={{ backgroundColor: ACCENT_COLOR }}
+              />
+              {/* Small decorative dots */}
+              <div 
+                className="absolute -left-20 md:-left-28 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full"
+                style={{ backgroundColor: ACCENT_COLOR }}
+              />
+              <div 
+                className="absolute -right-20 md:-right-28 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full"
+                style={{ backgroundColor: ACCENT_COLOR }}
+              />
+              <h2
+                className="relative text-3xl md:text-4xl lg:text-5xl font-bold"
+                style={{ color: 'var(--color-bg-primary)' }}
+              >
+                منتجاتنا
+              </h2>
+            </div>
+          </div>
           <p className="text-lg md:text-xl text-gray-600">
             اكتشف أحدث منتجاتنا وحلولنا التقنية
           </p>
@@ -101,10 +131,14 @@ export default function ProductsSection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-2xl transition-shadow duration-300 my-10 mx-2 cursor-pointer"
+                    className="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-2xl transition-shadow duration-300 my-10 mx-2 cursor-pointer border-2"
+                    style={{ borderColor: ACCENT_COLOR }}
                   >
                   {/* Product Image */}
-                  <div className="relative h-48 overflow-hidden bg-gray-100">
+                  <div 
+                    className="relative h-48 overflow-hidden bg-gray-100 border-b-2"
+                    style={{ borderColor: ACCENT_COLOR }}
+                  >
                     <Image
                       src={product.productImage}
                       alt={product.modelNumber}
@@ -118,7 +152,7 @@ export default function ProductsSection() {
                     {/* Model Number */}
                     <h3
                       className="font-bold text-lg truncate"
-                      style={{ color: '#382A67' }}
+                      style={{ color: ACCENT_COLOR }}
                     >
                       {product.modelNumber}
                     </h3>
@@ -201,7 +235,7 @@ export default function ProductsSection() {
           <Link
             href="/shop"
             className="inline-flex items-center gap-2 px-8 py-4 text-lg font-bold rounded-lg text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
-            style={{ backgroundColor: '#382A67' }}
+            style={{ backgroundColor: 'var(--color-bg-primary)' }}
           >
             <span>المزيد</span>
             <svg
@@ -223,3 +257,4 @@ export default function ProductsSection() {
     </section>
   );
 }
+

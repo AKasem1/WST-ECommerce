@@ -113,7 +113,7 @@ export default function Navbar({ categories }: NavbarProps) {
                           >
                             <Link
                               href={`/shop?category=${category._id}`}
-                              className="block px-6 py-3 text-right transition-colors duration-300 border-b border-gray-100 last:border-b-0"
+                              className="block px-6 py-3 text-right transition-colors duration-300 border-b border-gray-100"
                               style={{
                                 color: 'var(--color-text-primary)'
                               }}
@@ -130,6 +130,30 @@ export default function Navbar({ categories }: NavbarProps) {
                             </Link>
                           </motion.div>
                         ))}
+                        {/* Programs Link */}
+                        <motion.div
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: categories.length * 0.05, duration: 0.3 }}
+                        >
+                          <Link
+                            href="/shop?category=programs"
+                            className="block px-6 py-3 text-right transition-colors duration-300"
+                            style={{
+                              color: 'var(--color-text-primary)'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = '#f9f9f9';
+                              e.currentTarget.style.color = 'var(--color-bg-primary)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = 'white';
+                              e.currentTarget.style.color = 'var(--color-text-primary)';
+                            }}
+                          >
+                            البرامج المحاسبية
+                          </Link>
+                        </motion.div>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -274,6 +298,32 @@ export default function Navbar({ categories }: NavbarProps) {
                                 </Link>
                               </motion.div>
                             ))}
+                            {/* Programs Link */}
+                            <motion.div
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: categories.length * 0.05, duration: 0.2 }}
+                            >
+                              <Link
+                                href="/shop?category=programs"
+                                className="block py-3 px-6 text-right transition-colors duration-300 border-t border-gray-200"
+                                style={{
+                                  color: 'var(--color-text-primary)'
+                                }}
+                                onClick={() => {
+                                  setIsMobileMenuOpen(false);
+                                  setIsMobileCategoriesOpen(false);
+                                }}
+                                onTouchStart={(e) => {
+                                  e.currentTarget.style.color = 'var(--color-bg-primary)';
+                                }}
+                                onTouchEnd={(e) => {
+                                  e.currentTarget.style.color = 'var(--color-text-primary)';
+                                }}
+                              >
+                                البرامج
+                              </Link>
+                            </motion.div>
                           </motion.div>
                         )}
                       </AnimatePresence>

@@ -10,21 +10,24 @@ import 'swiper/css/pagination';
 import '@/app/swiper-custom.css';
 import { services } from '@/data/services';
 
+// Original section bg color - now used for accents
+const ACCENT_COLOR = '#BA5183';
+
 export default function ServicesSection() {
   return (
     <section 
-      className="relative py-16 md:py-24 lg:py-32 overflow-hidden"
-      style={{ backgroundColor: 'var(--color-bg-primary)' }}
+      className="relative py-16 md:py-24 lg:py-32 overflow-hidden bg-white"
       dir="rtl"
     >
-      {/* Floating Symbols Background */}
+      {/* Floating Symbols Background - now using accent color */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Top Left Symbol */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 0.1, y: 0 }}
           transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse' }}
-          className="absolute top-10 left-10 text-white text-6xl md:text-8xl"
+          className="absolute top-10 left-10 text-6xl md:text-8xl"
+          style={{ color: ACCENT_COLOR }}
         >
           ◆
         </motion.div>
@@ -34,7 +37,8 @@ export default function ServicesSection() {
           initial={{ opacity: 0, rotate: 0 }}
           whileInView={{ opacity: 0.1, rotate: 360 }}
           transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          className="absolute top-20 right-20 text-white text-5xl md:text-7xl"
+          className="absolute top-20 right-20 text-5xl md:text-7xl"
+          style={{ color: ACCENT_COLOR }}
         >
           ✦
         </motion.div>
@@ -44,7 +48,8 @@ export default function ServicesSection() {
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 0.1, scale: 1.2 }}
           transition={{ duration: 3, repeat: Infinity, repeatType: 'reverse' }}
-          className="absolute bottom-20 left-1/4 text-white text-4xl md:text-6xl"
+          className="absolute bottom-20 left-1/4 text-4xl md:text-6xl"
+          style={{ color: ACCENT_COLOR }}
         >
           ◇
         </motion.div>
@@ -54,7 +59,8 @@ export default function ServicesSection() {
           initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 0.1, x: -20 }}
           transition={{ duration: 4, repeat: Infinity, repeatType: 'reverse' }}
-          className="absolute bottom-32 right-1/3 text-white text-5xl md:text-7xl"
+          className="absolute bottom-32 right-1/3 text-5xl md:text-7xl"
+          style={{ color: ACCENT_COLOR }}
         >
           ✧
         </motion.div>
@@ -64,23 +70,54 @@ export default function ServicesSection() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 0.05 }}
           transition={{ duration: 2 }}
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-9xl md:text-[200px]"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-9xl md:text-[200px]"
+          style={{ color: ACCENT_COLOR }}
         >
           ◈
         </motion.div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        {/* Title */}
-        <motion.h2
+        {/* Title with Modern Shape */}
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="text-4xl md:text-5xl lg:text-6xl font-bold text-center text-white mb-12 md:mb-16 lg:mb-20"
+          className="flex justify-center mb-12 md:mb-16 lg:mb-20"
         >
-          خدماتنا
-        </motion.h2>
+          <div className="relative inline-block">
+            {/* Decorative shape behind title */}
+            <div 
+              className="absolute -inset-x-8 -inset-y-3 md:-inset-x-12 md:-inset-y-4 rounded-full opacity-15"
+              style={{ backgroundColor: ACCENT_COLOR }}
+            />
+            {/* Decorative accent lines */}
+            <div 
+              className="absolute -left-16 md:-left-24 top-1/2 -translate-y-1/2 w-8 md:w-16 h-1 rounded-full"
+              style={{ backgroundColor: ACCENT_COLOR }}
+            />
+            <div 
+              className="absolute -right-16 md:-right-24 top-1/2 -translate-y-1/2 w-8 md:w-16 h-1 rounded-full"
+              style={{ backgroundColor: ACCENT_COLOR }}
+            />
+            {/* Small decorative dots */}
+            <div 
+              className="absolute -left-20 md:-left-28 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full"
+              style={{ backgroundColor: ACCENT_COLOR }}
+            />
+            <div 
+              className="absolute -right-20 md:-right-28 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full"
+              style={{ backgroundColor: ACCENT_COLOR }}
+            />
+            <h2 
+              className="relative text-4xl md:text-5xl lg:text-6xl font-bold text-center"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              خدماتنا
+            </h2>
+          </div>
+        </motion.div>
 
         {/* Swiper Carousel */}
         <motion.div
@@ -115,12 +152,13 @@ export default function ServicesSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 my-10 mx-2 group"
+                  className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 my-10 mx-2 group border-2"
+                  style={{ borderColor: ACCENT_COLOR }}
                 >
                   {/* Image Container */}
                   <div 
-                    className="relative aspect-square overflow-hidden border-4 rounded-2xl"
-                    style={{ borderColor: 'var(--color-border-primary)' }}
+                    className="relative aspect-square overflow-hidden border-b-2"
+                    style={{ borderColor: ACCENT_COLOR }}
                   >
                     <Image
                       src={service.image}
@@ -152,3 +190,4 @@ export default function ServicesSection() {
     </section>
   );
 }
+
