@@ -5,15 +5,12 @@ import TypingSection from "@/components/TypingSection";
 import AboutUsSection from "@/components/AboutUsSection";
 import ProductsSection from "@/components/ProductsSection";
 import ProgramsSection from "@/components/ProgramsSection";
-import Hero from "@/components/Hero";
-import HeroPattern from "../components/HeroPattern";
+import HeroSection from "@/components/HeroSection";
 
 export default function Home() {
   return (
     <div>
-      {/* <HeroPattern /> */}
-      <Hero />
-      {/* <HeroSection /> */}
+      <HeroSection />
       <ServicesSection />
       <ProductsSection />
       <ProgramsSection />

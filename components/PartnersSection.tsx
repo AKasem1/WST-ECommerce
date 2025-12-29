@@ -22,19 +22,22 @@ export default function PartnersSection() {
     }
   }, [isInView, controls]);
 
-  // Auto-scroll
+  // Auto-scroll (moves right)
   useEffect(() => {
     const el = trackRef.current;
     if (!el) return;
+
+    // Start from middle to allow scrolling right
+    el.scrollLeft = el.scrollWidth / 2;
 
     let raf: number;
     const speed = 2; // Adjust speed here
 
     const step = () => {
       if (!paused && !dragging.current) {
-        el.scrollLeft += speed;
-        if (el.scrollLeft >= el.scrollWidth / 2) {
-          el.scrollLeft = 0;
+        el.scrollLeft -= speed;
+        if (el.scrollLeft <= 0) {
+          el.scrollLeft = el.scrollWidth / 2;
         }
       }
       raf = requestAnimationFrame(step);

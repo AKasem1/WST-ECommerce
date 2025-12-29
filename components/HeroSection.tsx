@@ -1,130 +1,146 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
-const heroImages = [
-  '/images/hero/carousel/1.jpeg',
-  '/images/hero/carousel/2.jpeg',
-  '/images/hero/carousel/3.jpeg',
-  '/images/hero/carousel/4.png',
-  '/images/hero/carousel/5.png',
-];
-
-export default function HeroSection() {
+// Typing text component
+const TypingText = ({ 
+  text, 
+  className, 
+  speed = 50, 
+  onComplete 
+}: { 
+  text: string; 
+  className?: string; 
+  speed?: number; 
+  onComplete?: () => void;
+}) => {
+  const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Auto-advance carousel every 5 seconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + heroImages.length) % heroImages.length);
-  };
-
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % heroImages.length);
-  };
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText(prev => prev + text[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
+      }, speed);
+      return () => clearTimeout(timeout);
+    } else if (onComplete) {
+      onComplete();
+    }
+  }, [currentIndex, text, speed, onComplete]);
 
   return (
-    <section className="relative w-full h-[80vh] overflow-hidden">
-      {/* Background Image Carousel */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentIndex}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.7, ease: 'easeInOut' }}
-          className="absolute inset-0"
-        >
-          <Image
-            src={heroImages[currentIndex]}
-            alt={`Hero background ${currentIndex + 1}`}
-            fill
-            className="object-contain"
-            priority={currentIndex === 0}
-            sizes="100vw"
-          />
-          {/* Dark overlay for better contrast */}
-          <div className="absolute inset-0 bg-black/30" />
-        </motion.div>
-      </AnimatePresence>
+    <span className={className}>
+      {displayedText}
+      {currentIndex < text.length && (
+        <motion.span
+          animate={{ opacity: [1, 0] }}
+          transition={{ duration: 0.5, repeat: Infinity }}
+          className="inline-block w-[3px] h-[1em] bg-white ml-1 align-middle"
+        />
+      )}
+    </span>
+  );
+};
 
-      {/* Navigation Arrows */}
-      <div className="absolute inset-0 flex items-center justify-between px-4 md:px-8 lg:px-12 z-10">
-        {/* Left Arrow */}
-        <motion.button
-          onClick={goToPrevious}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-          className="group relative w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-all duration-300 hover:bg-white/40 hover:scale-110"
-          aria-label="Previous image"
-        >
-          <svg
-            className="w-6 h-6 md:w-8 md:h-8 text-white transition-transform duration-300 group-hover:scale-110"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2.5}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </motion.button>
+export default function HeroSection() {
+  const [titleComplete, setTitleComplete] = useState(false);
+  const [descriptionComplete, setDescriptionComplete] = useState(false);
 
-        {/* Right Arrow */}
-        <motion.button
-          onClick={goToNext}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-          className="group relative w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-all duration-300 hover:bg-white/40 hover:scale-110"
-          aria-label="Next image"
-        >
-          <svg
-            className="w-6 h-6 md:w-8 md:h-8 text-white transition-transform duration-300 group-hover:scale-110"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2.5}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </motion.button>
+  const title = 'مؤسسة حلول الوسام للتجارة';
+  const description = 'شريكك الموثوق لحلول تقنية متكاملة تنقل أعمالك إلى آفاق جديدة من النجاح والتميز';
+
+  return (
+    <section className="relative w-full h-screen overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <Image
+          src="/images/hero-bg.png"
+          alt="Hero background"
+          fill
+          className="object-cover"
+          priority
+          sizes="100vw"
+        />
+        {/* Dark overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50" />
       </div>
 
-      {/* Carousel Indicators */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3 z-10">
-        {heroImages.map((_, index) => (
-          <motion.button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
-            className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 ${
-              index === currentIndex
-                ? 'bg-white scale-125'
-                : 'bg-white/50 hover:bg-white/75'
-            }`}
-            aria-label={`Go to image ${index + 1}`}
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 md:px-8 lg:px-12">
+        
+        {/* Logo + Title Section */}
+        <div className="mb-6 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6">
+          {/* Logo Image - appears after description completes */}
+          <motion.div 
+            className="relative w-[100px] h-[100px] md:w-[130px] md:h-[130px]"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={descriptionComplete ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.3, ease: 'easeOut' }}
+          >
+            <Image
+              src="/images/logo.png"
+              alt="WST Logo"
+              fill
+              className="object-contain"
+              priority
+            />
+          </motion.div>
+          
+          {/* Divider Line - appears first after description completes */}
+          <motion.div 
+            className="w-16 h-[2px] md:w-[2px] md:h-20 bg-white/60 hidden md:block"
+            initial={{ opacity: 0, scaleY: 0 }}
+            animate={descriptionComplete ? { opacity: 1, scaleY: 1 } : { opacity: 0, scaleY: 0 }}
+            transition={{ duration: 0.4, delay: 0, ease: 'easeOut' }}
           />
-        ))}
+          
+          {/* Arabic Company Name with typing animation */}
+          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white leading-tight drop-shadow-lg min-h-[1.5em]">
+            <TypingText 
+              text={title} 
+              speed={60} 
+              onComplete={() => setTitleComplete(true)} 
+            />
+          </h1>
+        </div>
+
+        {/* Description with typing animation - starts after title */}
+        <div className="text-lg md:text-xl lg:text-2xl text-white mb-8 md:mb-10 max-w-3xl leading-relaxed drop-shadow-md min-h-[2em]">
+          {titleComplete && (
+            <TypingText 
+              text={description} 
+              speed={30} 
+              onComplete={() => setDescriptionComplete(true)} 
+            />
+          )}
+        </div>
+
+        {/* CTA Button - appears last after logo */}
+        <motion.a
+          href="/shop"
+          initial={{ opacity: 0, y: 30 }}
+          animate={descriptionComplete ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.5, delay: 0.6, ease: 'easeOut' }}
+          className="inline-flex items-center gap-3 px-8 md:px-10 py-3 md:py-4 bg-[#992864] text-white font-bold text-lg md:text-xl rounded-full hover:bg-[#7a1f50] transition-all duration-300 hover:scale-105 shadow-lg"
+        >
+          متجرنا
+          <svg
+            className="w-5 h-5 md:w-6 md:h-6 rotate-180"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M17 8l4 4m0 0l-4 4m4-4H3"
+            />
+          </svg>
+        </motion.a>
       </div>
     </section>
   );
