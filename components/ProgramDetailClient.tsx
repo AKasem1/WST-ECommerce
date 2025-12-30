@@ -14,6 +14,7 @@ interface ProgramDetailClientProps {
 }
 
 export default function ProgramDetailClient({ program }: ProgramDetailClientProps) {
+  console.log(program);
   return (
     <div className="min-h-screen bg-white" dir="rtl">
       {/* Hero Section */}
@@ -278,7 +279,7 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
             )}
 
             {/* Pricing */}
-            {!program.isFree && (
+            {(program.hasSubscription && program.subscriptionPackages && program.subscriptionPackages.length > 0) && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -301,8 +302,7 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
                     ${program.basePrice}
                   </div>
                 )} */}
-                {program.hasSubscription && program.subscriptionPackages && program.subscriptionPackages.length > 0 && (
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                     {program.subscriptionPackages.map((pkg, idx) => (
                       <motion.div 
                         key={idx} 
@@ -337,9 +337,12 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
                           </div>
 
                           {/* Package Name */}
-                          <h4 className="font-bold text-xl mb-4" style={{ color: PRIMARY_COLOR }}>
+                          <h4 className="font-bold text-xl mb-2" style={{ color: PRIMARY_COLOR }}>
                             {pkg.name}
                           </h4>
+                          <p className="text-xl text-black mb-4">
+                            {idx === program.subscriptionPackages!.length - 1 ? 'يبدأ من' : '\u00A0'}
+                          </p>
 
                           {/* Price Box */}
                           <div 
@@ -379,7 +382,6 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
                       </motion.div>
                     ))}
                   </div>
-                )}
               </motion.div>
             )}
 

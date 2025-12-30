@@ -9,7 +9,7 @@ import HeroSection from "@/components/HeroSection";
 
 export default function Home() {
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <HeroSection />
       <ServicesSection />
       <ProductsSection />

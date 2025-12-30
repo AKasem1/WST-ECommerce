@@ -53,7 +53,7 @@ export default function HeroSection() {
   const description = 'شريكك الموثوق لحلول تقنية متكاملة تنقل أعمالك إلى آفاق جديدة من النجاح والتميز';
 
   return (
-    <section className="relative w-full h-screen overflow-hidden">
+    <section className="relative w-full h-[90vh] overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image

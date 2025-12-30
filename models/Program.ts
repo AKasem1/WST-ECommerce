@@ -70,7 +70,7 @@ const SubscriptionPackageSchema = new Schema<ISubscriptionPackage>({
   duration: {
     type: Number,
     required: true,
-    min: 1,
+    min: 0,
   },
   features: {
     type: [String],

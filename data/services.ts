@@ -3,9 +3,9 @@ import { Service } from '@/types/service';
 export const services: Service[] = [
   {
     id: 1,
-    name: 'أنظمة إنذار الحريق',
-    image: '/images/services/fire-alarm.webp',
-    slug: 'fire-alarm-systems'
+    name: 'انظمة الحضور والانصراف',
+    image: '/images/services/attendance-systems.png',
+    slug: 'attendance-systems'
   },
   {
     id: 2,
