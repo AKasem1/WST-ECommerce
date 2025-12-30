@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 export interface ISubscriptionPackage {
   name: string;
   nameEn?: string;
+  type: string;
   price: number;
   duration: number;
   features: string[];

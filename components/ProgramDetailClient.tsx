@@ -41,7 +41,7 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
                   src={program.programImage}
                   alt={program.name}
                   fill
-                  className="object-cover"
+                  className="object-contain p-4"
                   priority
                 />
               </motion.div>
@@ -287,7 +287,7 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
                 className="bg-white rounded-2xl p-8 shadow-lg border-2"
                 style={{ borderColor: ACCENT_COLOR }}
               >
-                <div className="relative inline-block mb-6">
+                {/* <div className="relative inline-block mb-6">
                   <div 
                     className="absolute -inset-x-4 -inset-y-2 rounded-full opacity-15"
                     style={{ backgroundColor: ACCENT_COLOR }}
@@ -295,34 +295,88 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
                   <h2 className="relative text-3xl font-bold" style={{ color: PRIMARY_COLOR }}>
                     التسعير
                   </h2>
-                </div>
-                {program.basePrice && (
+                </div> */}
+                {/* {program.basePrice && (
                   <div className="text-4xl font-bold mb-4" style={{ color: PRIMARY_COLOR }}>
                     ${program.basePrice}
                   </div>
-                )}
+                )} */}
                 {program.hasSubscription && program.subscriptionPackages && program.subscriptionPackages.length > 0 && (
-                  <div className="grid md:grid-cols-3 gap-4 mt-6">
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                     {program.subscriptionPackages.map((pkg, idx) => (
-                      <div 
+                      <motion.div 
                         key={idx} 
-                        className="border-2 rounded-lg p-4"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: idx * 0.1 }}
+                        className="bg-white rounded-2xl overflow-hidden shadow-lg border-2 hover:shadow-xl transition-shadow duration-300 py-2"
                         style={{ borderColor: ACCENT_COLOR }}
                       >
-                        <h4 className="font-bold text-lg mb-2">{pkg.name}</h4>
-                        <p className="text-3xl font-bold mb-2" style={{ color: PRIMARY_COLOR }}>${pkg.price}</p>
-                        <p className="text-sm text-gray-600">{pkg.duration}</p>
-                        {pkg.features && (
-                          <ul className="mt-4 space-y-2 text-sm">
-                            {pkg.features.map((feature, fIdx) => (
-                              <li key={fIdx} className="flex items-start gap-2">
-                                <span style={{ color: ACCENT_COLOR }}>✓</span>
-                                <span>{feature}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
+                        {/* Card Content */}
+                        <div className="p-6 text-center">
+                          {/* Icon */}
+                          <div 
+                            className="w-16 h-16 mx-auto mb-4 rounded-xl flex items-center justify-center"
+                            style={{ backgroundColor: `${ACCENT_COLOR}15`, border: `2px solid ${ACCENT_COLOR}` }}
+                          >
+                            <svg 
+                              className="w-8 h-8" 
+                              style={{ color: PRIMARY_COLOR }}
+                              fill="none" 
+                              stroke="currentColor" 
+                              viewBox="0 0 24 24"
+                            >
+                              <path 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round" 
+                                strokeWidth={2} 
+                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" 
+                              />
+                            </svg>
+                          </div>
+
+                          {/* Package Name */}
+                          <h4 className="font-bold text-xl mb-4" style={{ color: PRIMARY_COLOR }}>
+                            {pkg.name}
+                          </h4>
+
+                          {/* Price Box */}
+                          <div 
+                            className="rounded-xl py-4 px-6 mb-4"
+                            style={{ backgroundColor: PRIMARY_COLOR }}
+                          >
+                            <div className="flex items-center justify-center gap-2 text-white">
+                              <span className="text-lg">ريال</span>
+                              <span className="text-4xl font-bold">{pkg.price}</span>
+                            </div>
+                          </div>
+
+                          {/* Duration/Category */}
+                          <p className="text-gray-600 mb-6">{pkg.type}</p>
+
+                          {/* Features List */}
+                          {pkg.features && pkg.features.length > 0 && (
+                            <ul className="text-right space-y-2 mb-6">
+                              {pkg.features.map((feature, fIdx) => (
+                                <li key={fIdx} className="flex items-start gap-2 text-sm text-gray-700">
+                                  <span style={{ color: ACCENT_COLOR }}>✓</span>
+                                  <span>{feature}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+
+                          {/* CTA Button */}
+                          <Link
+                            href={idx === program.subscriptionPackages!.length - 1 ? "/contact" : "/programs/comparison"}
+                            className="w-full py-3 px-6 rounded-full font-bold text-white transition-all duration-300 hover:opacity-90 hover:scale-105 block text-center"
+                            style={{ backgroundColor: PRIMARY_COLOR }}
+                          >
+                            {idx === program.subscriptionPackages!.length - 1 ? "تواصل معنا" : "معرفة المزيد"}
+                          </Link>
+                        </div>
+                      </motion.div>
                     ))}
                   </div>
                 )}

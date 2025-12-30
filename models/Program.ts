@@ -4,6 +4,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 export interface ISubscriptionPackage {
   name: string;
   nameEn?: string;
+  type: string;
   price: number;
   duration: number; // in months
   features: string[];
@@ -56,6 +57,10 @@ const SubscriptionPackageSchema = new Schema<ISubscriptionPackage>({
   },
   nameEn: {
     type: String,
+  },
+  type: {
+    type: String,
+    required: true,
   },
   price: {
     type: Number,

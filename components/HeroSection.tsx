@@ -73,12 +73,12 @@ export default function HeroSection() {
         
         {/* Logo + Title Section */}
         <div className="mb-6 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6">
-          {/* Logo Image - appears after description completes */}
+          {/* Logo Image - appears first before typing */}
           <motion.div 
             className="relative w-[100px] h-[100px] md:w-[130px] md:h-[130px]"
             initial={{ opacity: 0, scale: 0.5 }}
-            animate={descriptionComplete ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
-            transition={{ duration: 0.5, delay: 0.3, ease: 'easeOut' }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             <Image
               src="/images/logo.png"
@@ -89,7 +89,7 @@ export default function HeroSection() {
             />
           </motion.div>
           
-          {/* Divider Line - appears first after description completes */}
+          {/* Divider Line - appears after description completes */}
           <motion.div 
             className="w-16 h-[2px] md:w-[2px] md:h-20 bg-white/60 hidden md:block"
             initial={{ opacity: 0, scaleY: 0 }}
