@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -111,11 +111,17 @@ export default function ProductsSection() {
           transition={{ duration: 0.8, delay: 0.3 }}
         >
           <Swiper
-            modules={[Navigation, Pagination]}
+            modules={[Navigation, Pagination, Autoplay]}
             spaceBetween={24}
             navigation
             pagination={{ clickable: true }}
             loop={true}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }}
+            speed={800}
             breakpoints={{
               320: { slidesPerView: 1 },
               640: { slidesPerView: 2 },

@@ -310,11 +310,11 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.4, delay: idx * 0.1 }}
-                        className="bg-white rounded-2xl overflow-hidden shadow-lg border-2 hover:shadow-xl transition-shadow duration-300 py-2"
+                        className="bg-white rounded-2xl overflow-hidden shadow-lg border-2 hover:shadow-xl transition-shadow duration-300 py-2 h-full flex flex-col"
                         style={{ borderColor: ACCENT_COLOR }}
                       >
                         {/* Card Content */}
-                        <div className="p-6 text-center">
+                        <div className="p-6 text-center flex flex-col flex-grow">
                           {/* Icon */}
                           <div 
                             className="w-16 h-16 mx-auto mb-4 rounded-xl flex items-center justify-center"
@@ -359,21 +359,23 @@ export default function ProgramDetailClient({ program }: ProgramDetailClientProp
                           <p className="text-gray-600 mb-6">{pkg.type}</p>
 
                           {/* Features List */}
-                          {pkg.features && pkg.features.length > 0 && (
-                            <ul className="text-right space-y-2 mb-6">
-                              {pkg.features.map((feature, fIdx) => (
-                                <li key={fIdx} className="flex items-start gap-2 text-sm text-gray-700">
-                                  <span style={{ color: ACCENT_COLOR }}>✓</span>
-                                  <span>{feature}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
+                          <div className="flex-grow">
+                            {pkg.features && pkg.features.length > 0 && (
+                              <ul className="text-right space-y-2 mb-6">
+                                {pkg.features.map((feature, fIdx) => (
+                                  <li key={fIdx} className="flex items-start gap-2 text-sm text-gray-700">
+                                    <span style={{ color: ACCENT_COLOR }}>✓</span>
+                                    <span>{feature}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
 
-                          {/* CTA Button */}
+                          {/* CTA Button - Always at bottom */}
                           <Link
                             href={idx === program.subscriptionPackages!.length - 1 ? "/contact" : "/programs/comparison"}
-                            className="w-full py-3 px-6 rounded-full font-bold text-white transition-all duration-300 hover:opacity-90 hover:scale-105 block text-center"
+                            className="w-full py-3 px-6 rounded-full font-bold text-white transition-all duration-300 hover:opacity-90 hover:scale-105 block text-center mt-auto"
                             style={{ backgroundColor: PRIMARY_COLOR }}
                           >
                             {idx === program.subscriptionPackages!.length - 1 ? "تواصل معنا" : "معرفة المزيد"}

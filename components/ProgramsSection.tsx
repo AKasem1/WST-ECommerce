@@ -166,11 +166,11 @@ export default function ProgramsSection() {
             pagination={{ clickable: true }}
             loop={true}
             autoplay={{
-              delay: 500,
+              delay: 3000,
               disableOnInteraction: false,
               pauseOnMouseEnter: true,
             }}
-            speed={600}
+            speed={800}
             breakpoints={{
               320: { slidesPerView: 1 },
               640: { slidesPerView: 2 },

@@ -77,10 +77,10 @@ const comparisonData = [
     category: 'عملاء وموردين',
     features: [
       { name: 'بيانات العملاء والموردين', cashier: true, merchant: true, enterprise: true },
-      { name: 'ارصدة حسابات العملاء', cashier: false, merchant: true, enterprise: true },
+      { name: 'ارصدة حسابات العملاء', cashier: true, merchant: true, enterprise: true },
       { name: 'كشف حساب عميل', cashier: true, merchant: true, enterprise: true },
-      { name: 'حركة اخر سداد للعملاء', cashier: false, merchant: true, enterprise: true },
-      { name: 'كشف حساب عميل مجمع', cashier: false, merchant: true, enterprise: true },
+      { name: 'حركة اخر سداد للعملاء', cashier: true, merchant: true, enterprise: true },
+      { name: 'كشف حساب عميل مجمع', cashier: true, merchant: true, enterprise: true },
     ],
   },
   {
