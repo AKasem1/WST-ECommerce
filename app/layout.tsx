@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
+import FloatingContactButton from "@/components/FloatingContactButton";
 import { getCategories } from "@/lib/server/categoryServer";
 
 const geistSans = Geist({
@@ -37,6 +38,7 @@ export default async function RootLayout({
           <Navbar categories={categories} />
           {children}
           <Footer />
+          <FloatingContactButton />
         </Providers>
       </body>
     </html>
