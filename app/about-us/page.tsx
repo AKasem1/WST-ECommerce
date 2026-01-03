@@ -91,6 +91,176 @@ export default function AboutUsPage() {
         </div>
       </section>
 
+      {/* About Company Section */}
+      <section className="bg-gray-50 py-16 md:py-24">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto" dir="rtl">
+            {/* Section Title */}
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-8"
+              style={{ color: '#382A67' }}
+            >
+              من نحن
+            </motion.h2>
+
+            {/* Main Description */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="bg-white rounded-2xl p-8 shadow-lg mb-10"
+            >
+              <p className="text-lg md:text-xl leading-relaxed text-gray-700 text-center">
+                <span className="font-bold" style={{ color: '#BA5183' }}>مؤسسة حلول الوسام للتجارة</span> هي مؤسسة سعودية متخصصة في تقديم الحلول التقنية والأنظمة الأمنية والبرمجية المحاسبية. يقع مقرها الرئيسي في مدينة <span className="font-semibold">جدة</span>، وتحديداً في حي الشرفية بشارع خالد بن الوليد.
+              </p>
+              <p className="text-lg md:text-xl leading-relaxed text-gray-700 text-center mt-4">
+                بدأت نشاطات وخدمات المؤسسة في عام <span className="font-bold" style={{ color: '#382A67' }}>2022</span> وتشمل:
+              </p>
+            </motion.div>
+
+            {/* Services Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+              {/* Service 1: الأنظمة البرمجية والمحاسبية */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-t-4"
+                style={{ borderColor: '#BA5183' }}
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#BA5183' }}>
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold" style={{ color: '#382A67' }}>الأنظمة البرمجية والمحاسبية</h3>
+                </div>
+                <p className="text-gray-600 leading-relaxed">
+                  توفر برامج مالية ومحاسبية متكاملة لإدارة المؤسسات
+                </p>
+              </motion.div>
+
+              {/* Service 2: الأنظمة الأمنية */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-t-4"
+                style={{ borderColor: '#382A67' }}
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#382A67' }}>
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold" style={{ color: '#382A67' }}>الأنظمة الأمنية</h3>
+                </div>
+                <p className="text-gray-600 leading-relaxed">
+                  بيع وتركيب كاميرات المراقبة، وأجهزة الحضور والانصراف
+                </p>
+              </motion.div>
+
+              {/* Service 3: تجهيزات نقاط البيع */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-t-4"
+                style={{ borderColor: '#BA5183' }}
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#BA5183' }}>
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold" style={{ color: '#382A67' }}>تجهيزات نقاط البيع (POS)</h3>
+                </div>
+                <p className="text-gray-600 leading-relaxed">
+                  توفر أجهزة الكاشير، قارئ الباركود، والطابعات الحرارية
+                </p>
+              </motion.div>
+
+              {/* Service 4: شبكات الحاسب والاتصالات */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-t-4"
+                style={{ borderColor: '#382A67' }}
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#382A67' }}>
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold" style={{ color: '#382A67' }}>شبكات الحاسب والاتصالات</h3>
+                </div>
+                <p className="text-gray-600 leading-relaxed">
+                  تقديم حلول الشبكات (مثل السويتشات) وأجهزة الكمبيوتر ومستلزماتها
+                </p>
+              </motion.div>
+
+              {/* Service 5: خدمات الصيانة والتركيب */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border-t-4"
+                style={{ borderColor: '#BA5183' }}
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#BA5183' }}>
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold" style={{ color: '#382A67' }}>خدمات الصيانة والتركيب</h3>
+                </div>
+                <p className="text-gray-600 leading-relaxed">
+                  توفر المؤسسة خدمات الدعم الفني والتركيب الميداني لجميع الأجهزة والأنظمة التي تقدمها
+                </p>
+              </motion.div>
+            </div>
+
+            {/* Certification Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="rounded-2xl p-6 md:p-8 text-center"
+              style={{ background: 'linear-gradient(135deg, #382A67, #BA5183)' }}
+            >
+              <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <p className="text-white text-lg md:text-xl font-semibold">
+                  المؤسسة مسجلة وموثقة لدى <span className="font-bold">وزارة التجارة السعودية</span> ومنصة الأعمال لضمان موثوقية التعاملات التجارية
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section 
         className="relative py-16 md:py-20 overflow-hidden"

@@ -22,7 +22,7 @@ const comparisonData = [
       { name: 'المجموعة الضريبية', cashier: true, merchant: true, enterprise: true },
       { name: 'تعريف البنوك', cashier: false, merchant: true, enterprise: true },
       { name: 'تعريف الخزنة', cashier: false, merchant: true, enterprise: true },
-      { name: 'تعريف المخازن', cashier: true, merchant: false, enterprise: true },
+      { name: 'تعريف المخازن', cashier: true, merchant: true, enterprise: true },
       { name: 'تعريف الوحدات', cashier: true, merchant: true, enterprise: true },
       { name: 'تعريف الأصناف', cashier: true, merchant: true, enterprise: true },
       { name: 'تعريف مجموعة الأصناف', cashier: true, merchant: true, enterprise: true },
