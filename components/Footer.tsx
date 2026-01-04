@@ -107,7 +107,7 @@ export default function Footer() {
             <ul className="space-y-3" dir="rtl">
               <li>
                 <Link 
-                  href="/about" 
+                  href="/about-us" 
                   className="text-sm md:text-base text-gray-300 hover:text-white transition-colors duration-300"
                 >
                   • من نحن
