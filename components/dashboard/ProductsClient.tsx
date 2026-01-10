@@ -24,6 +24,8 @@ export default function ProductsClient({ initialProducts, categories }: Products
   const [isLoading, setIsLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
+  const [imageInputType, setImageInputType] = useState<'file' | 'url'>('file');
+  const [imageUrl, setImageUrl] = useState<string>('');
 
   // Form state
   const [formData, setFormData] = useState({
@@ -58,6 +60,8 @@ export default function ProductsClient({ initialProducts, categories }: Products
     });
     setImageFile(null);
     setImagePreview('');
+    setImageInputType('file');
+    setImageUrl('');
   };
 
   // Handle image selection
@@ -65,6 +69,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
+      setImageUrl(''); // Clear URL when file is selected
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -73,23 +78,34 @@ export default function ProductsClient({ initialProducts, categories }: Products
     }
   };
 
+  // Handle image URL input
+  const handleImageUrlChange = (url: string) => {
+    setImageUrl(url);
+    setImageFile(null); // Clear file when URL is entered
+    setImagePreview(url);
+    setFormData({ ...formData, productImage: url });
+  };
+
   // Handle create
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      let imageUrl = formData.productImage;
+      let finalImageUrl = formData.productImage;
 
-      // Upload image if selected
-      if (imageFile) {
+      // Only upload if file is selected (not using URL input)
+      if (imageInputType === 'file' && imageFile) {
         const uploadedUrl = await imgUpload(imageFile);
         if (!uploadedUrl) {
           alert('فشل في رفع الصورة');
           setIsLoading(false);
           return;
         }
-        imageUrl = uploadedUrl;
+        finalImageUrl = uploadedUrl;
+      } else if (imageInputType === 'url' && imageUrl) {
+        // Use the URL directly
+        finalImageUrl = imageUrl;
       }
 
       const response = await fetch('/api/products', {
@@ -99,7 +115,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
           products: [
             {
               modelNumber: formData.modelNumber,
-              productImage: imageUrl,
+              productImage: finalImageUrl,
               productSpecs: formData.productSpecs.filter(spec => spec.trim() !== ''),
               quantity: parseInt(formData.quantity),
               price: parseFloat(formData.price),
@@ -134,17 +150,20 @@ export default function ProductsClient({ initialProducts, categories }: Products
     setIsLoading(true);
 
     try {
-      let imageUrl = formData.productImage;
+      let finalImageUrl = formData.productImage;
 
-      // Upload new image if selected
-      if (imageFile) {
+      // Only upload if file is selected (not using URL input)
+      if (imageInputType === 'file' && imageFile) {
         const uploadedUrl = await imgUpload(imageFile);
         if (!uploadedUrl) {
           alert('فشل في رفع الصورة');
           setIsLoading(false);
           return;
         }
-        imageUrl = uploadedUrl;
+        finalImageUrl = uploadedUrl;
+      } else if (imageInputType === 'url' && imageUrl) {
+        // Use the URL directly
+        finalImageUrl = imageUrl;
       }
 
       const response = await fetch(`/api/products/${selectedProduct._id}`, {
@@ -152,7 +171,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           modelNumber: formData.modelNumber,
-          productImage: imageUrl,
+          productImage: finalImageUrl,
           productSpecs: formData.productSpecs.filter(spec => spec.trim() !== ''),
           quantity: parseInt(formData.quantity),
           price: parseFloat(formData.price),
@@ -345,9 +364,8 @@ export default function ProductsClient({ initialProducts, categories }: Products
                       ${product.price.toFixed(2)}
                     </td>
                     <td className="px-6 py-4 text-sm">
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        product.visibility ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                      }`}>
+                      <span className={`px-2 py-1 rounded-full text-xs ${product.visibility ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
                         {product.visibility ? 'ظاهر' : 'مخفي'}
                       </span>
                     </td>
@@ -440,15 +458,51 @@ export default function ProductsClient({ initialProducts, categories }: Products
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               الصورة
             </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            {/* Toggle buttons for input type */}
+            <div className="flex gap-2 mb-3">
+              <button
+                type="button"
+                onClick={() => setImageInputType('file')}
+                className={`flex-1 px-3 py-2 text-sm rounded-lg border transition-colors ${imageInputType === 'file'
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
+              >
+                رفع صورة
+              </button>
+              <button
+                type="button"
+                onClick={() => setImageInputType('url')}
+                className={`flex-1 px-3 py-2 text-sm rounded-lg border transition-colors ${imageInputType === 'url'
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
+              >
+                رابط الصورة
+              </button>
+            </div>
+            {/* File input */}
+            {imageInputType === 'file' && (
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            )}
+            {/* URL input */}
+            {imageInputType === 'url' && (
+              <input
+                type="url"
+                placeholder="أدخل رابط الصورة هنا..."
+                value={imageUrl}
+                onChange={(e) => handleImageUrlChange(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
+              />
+            )}
             {imagePreview && (
               <img src={imagePreview} alt="Preview" className="mt-2 w-32 h-32 object-cover rounded" />
             )}
@@ -606,15 +660,51 @@ export default function ProductsClient({ initialProducts, categories }: Products
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               الصورة
             </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            {/* Toggle buttons for input type */}
+            <div className="flex gap-2 mb-3">
+              <button
+                type="button"
+                onClick={() => setImageInputType('file')}
+                className={`flex-1 px-3 py-2 text-sm rounded-lg border transition-colors ${imageInputType === 'file'
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
+              >
+                رفع صورة
+              </button>
+              <button
+                type="button"
+                onClick={() => setImageInputType('url')}
+                className={`flex-1 px-3 py-2 text-sm rounded-lg border transition-colors ${imageInputType === 'url'
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
+              >
+                رابط الصورة
+              </button>
+            </div>
+            {/* File input */}
+            {imageInputType === 'file' && (
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            )}
+            {/* URL input */}
+            {imageInputType === 'url' && (
+              <input
+                type="url"
+                placeholder="أدخل رابط الصورة هنا..."
+                value={imageUrl}
+                onChange={(e) => handleImageUrlChange(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
+              />
+            )}
             {imagePreview && (
               <img src={imagePreview} alt="Preview" className="mt-2 w-32 h-32 object-cover rounded" />
             )}
