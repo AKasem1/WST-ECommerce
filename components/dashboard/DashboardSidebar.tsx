@@ -3,14 +3,22 @@
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { 
+  LayoutDashboard, 
+  Folder, 
+  Package, 
+  Settings, 
+  Monitor, 
+  Mail 
+} from 'lucide-react';
 
 const navItems = [
-  { name: 'لوحة التحكم', href: '/dashboard', icon: '📊' },
-  { name: 'الفئات', href: '/dashboard/categories', icon: '📁' },
-  { name: 'المنتجات', href: '/dashboard/products', icon: '📦' },
-  { name: 'الخدمات', href: '/dashboard/services', icon: '⚙️' },
-  { name: 'البرامج', href: '/dashboard/programs', icon: '💻' },
-  { name: 'الاستفسارات', href: '/dashboard/inquiries', icon: '📧' },
+  { name: 'لوحة التحكم', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'الفئات', href: '/dashboard/categories', icon: Folder },
+  { name: 'المنتجات', href: '/dashboard/products', icon: Package },
+  { name: 'الخدمات', href: '/dashboard/services', icon: Settings },
+  { name: 'البرامج', href: '/dashboard/programs', icon: Monitor },
+  { name: 'الاستفسارات', href: '/dashboard/inquiries', icon: Mail },
 ];
 
 export default function DashboardSidebar() {
@@ -27,6 +35,7 @@ export default function DashboardSidebar() {
       <nav className="px-4 space-y-2">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
+          const Icon = item.icon;
           return (
             <Link key={item.href} href={item.href}>
               <motion.div
@@ -39,7 +48,7 @@ export default function DashboardSidebar() {
                 }`}
                 style={isActive ? { backgroundColor: '#BA5183' } : {}}
               >
-                <span className="text-xl">{item.icon}</span>
+                <Icon className="w-5 h-5" />
                 <span className="font-medium">{item.name}</span>
               </motion.div>
             </Link>

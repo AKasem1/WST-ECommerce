@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Folder, Package, Settings } from 'lucide-react';
 import type { DashboardStats as StatsType } from '@/types/dashboard';
 
 interface DashboardStatsProps {
@@ -13,14 +14,14 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
       title: 'الفئات',
       total: stats.categories.total,
       recent: stats.categories.recent,
-      icon: '📁',
+      icon: Folder,
       color: 'from-blue-500 to-blue-600',
     },
     {
       title: 'المنتجات',
       total: stats.products.total,
       recent: stats.products.recent,
-      icon: '📦',
+      icon: Package,
       color: 'from-green-500 to-green-600',
       // extra: `${stats.products.lowStock} منتج منخفض المخزون`,
     },
@@ -28,7 +29,7 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
       title: 'الخدمات',
       total: stats.services.total,
       recent: stats.services.recent,
-      icon: '⚙️',
+      icon: Settings,
       color: 'from-purple-500 to-purple-600',
     },
   ];
@@ -53,7 +54,7 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
                   {card.total}
                 </h3>
               </div>
-              <div className="text-4xl">{card.icon}</div>
+              <card.icon className="w-8 h-8 text-white" />
             </div>
           </div>
         </motion.div>
