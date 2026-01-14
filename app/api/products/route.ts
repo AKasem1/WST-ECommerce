@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
         // Generate unique slug from model number
         let slug = generateSlug(modelNumber);
         let slugCounter = 1;
-        
+
         // Check if slug already exists and make it unique if needed
         while (await Product.findOne({ slug })) {
           slug = `${generateSlug(modelNumber)}-${slugCounter}`;
@@ -259,6 +259,30 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(
       { error: 'An error occurred while fetching products' },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE /api/products - Delete all products
+export async function DELETE() {
+  try {
+    await dbConnect();
+
+    const result = await Product.deleteMany({});
+
+    return NextResponse.json(
+      {
+        message: 'All products deleted successfully',
+        deletedCount: result.deletedCount,
+      },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error('Delete all products error:', error);
+
+    return NextResponse.json(
+      { error: 'An error occurred while deleting products' },
       { status: 500 }
     );
   }
