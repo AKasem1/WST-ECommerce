@@ -359,9 +359,85 @@ export default function ShopClient({
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-20"
+                transition={{ duration: 0.5 }}
+                className="flex flex-col items-center justify-center py-24"
               >
-                <p className="text-xl text-gray-600">لا توجد منتجات في هذا التصنيف</p>
+                {/* Decorative container */}
+                <div className="relative">
+                  {/* Glowing background effect */}
+                  <div 
+                    className="absolute inset-0 rounded-full blur-3xl opacity-20"
+                    style={{ background: 'linear-gradient(135deg, #382A67 0%, #BA5183 100%)' }}
+                  />
+                  
+                  {/* Icon container */}
+                  <motion.div
+                    animate={{ 
+                      y: [0, -10, 0],
+                    }}
+                    transition={{ 
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                    className="relative w-32 h-32 rounded-full flex items-center justify-center mb-8"
+                    style={{ background: 'linear-gradient(135deg, #382A67 0%, #BA5183 100%)' }}
+                  >
+                    {/* Sparkle/Clock icon */}
+                    <svg 
+                      className="w-16 h-16 text-white" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={1.5} 
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" 
+                      />
+                    </svg>
+                  </motion.div>
+                </div>
+
+                {/* Main text */}
+                <h3 
+                  className="text-4xl font-bold mb-4 px-4 py-4"
+                  style={{ 
+                    background: 'linear-gradient(135deg, #382A67 0%, #BA5183 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    fontFamily: 'Cairo, sans-serif',
+                  }}
+                >
+                  قريبًا
+                </h3>
+
+                {/* Subtitle */}
+                <p className="text-gray-500 text-lg max-w-md text-center">
+                  نعمل على إضافة منتجات جديدة في هذا التصنيف
+                </p>
+
+                {/* Decorative dots */}
+                <div className="flex gap-2 mt-6">
+                  {[0, 1, 2].map((i) => (
+                    <motion.div
+                      key={i}
+                      animate={{ 
+                        scale: [1, 1.2, 1],
+                        opacity: [0.5, 1, 0.5]
+                      }}
+                      transition={{ 
+                        duration: 1.5,
+                        repeat: Infinity,
+                        delay: i * 0.2
+                      }}
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: '#BA5183' }}
+                    />
+                  ))}
+                </div>
               </motion.div>
             ) : (
               <>
