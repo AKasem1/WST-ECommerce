@@ -1,0 +1,406 @@
+'use client';
+
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import type { ProgramResponse } from '@/types/program';
+
+// Accent color for decorative elements
+const ACCENT_COLOR = '#BA5183';
+const PRIMARY_COLOR = '#382A67';
+
+interface ProgramDetailClientProps {
+  program: ProgramResponse;
+}
+
+export default function ProgramDetailClient({ program }: ProgramDetailClientProps) {
+  console.log(program);
+  return (
+    <div className="min-h-screen bg-white" dir="rtl">
+      {/* Hero Section */}
+      <section 
+        className="relative py-20 text-white"
+        style={{ background: `linear-gradient(135deg, ${PRIMARY_COLOR} 0%, ${ACCENT_COLOR} 100%)` }}
+      >
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-6xl mx-auto"
+          >
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              {/* Program Image */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="relative aspect-square rounded-2xl overflow-hidden shadow-2xl border-4"
+                style={{ borderColor: 'rgba(255,255,255,0.3)' }}
+              >
+                <Image
+                  src={program.programImage}
+                  alt={program.name}
+                  fill
+                  className="object-contain p-4"
+                  priority
+                />
+              </motion.div>
+
+              {/* Program Info */}
+              <div className="space-y-6">
+                <div>
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-white">
+                    {program.name}
+                  </h1>
+                  {program.nameEn && (
+                    <p className="text-xl text-purple-200">{program.nameEn}</p>
+                  )}
+                </div>
+
+                {program.shortDescription && (
+                  <p className="text-lg text-purple-100">{program.shortDescription}</p>
+                )}
+
+                {/* Badges */}
+                <div className="flex flex-wrap gap-3">
+                  {/* <span className={`px-4 py-2 rounded-full font-bold ${
+                    program.isFree ? 'bg-green-500' : 'bg-blue-500'
+                  }`}>
+                    {program.isFree ? 'مجاني' : 'مدفوع'}
+                  </span> */}
+                  {program.supportsOffline && (
+                    <span className="px-4 py-2 rounded-full bg-yellow-500 text-gray-900 font-bold">
+                      يعمل بدون إنترنت
+                    </span>
+                  )}
+                  {program.visibility && (
+                    <span className="px-4 py-2 rounded-full bg-purple-500 font-bold">
+                      متاح الآن
+                    </span>
+                  )}
+                </div>
+
+                {/* Platforms */}
+                {program.platforms && program.platforms.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-semibold text-purple-200 mb-2">المنصات المدعومة:</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {program.platforms.map((platform, idx) => (
+                        <span key={idx} className="px-3 py-1 bg-white/20 rounded-lg text-sm">
+                          {platform}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Download/Demo Links */}
+                <div className="flex flex-wrap gap-4">
+                  {program.downloadLink && (
+                    <a
+                      href={program.downloadLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-3 bg-white text-purple-900 rounded-lg font-bold hover:bg-purple-100 transition-colors"
+                    >
+                      تحميل البرنامج
+                    </a>
+                  )}
+                  {program.demoLink && (
+                    <a
+                      href={program.demoLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-3 bg-purple-700 text-white rounded-lg font-bold hover:bg-purple-600 transition-colors"
+                    >
+                      تجربة مجانية
+                    </a>
+                  )}
+                  {program.documentationLink && (
+                    <a
+                      href={program.documentationLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-3 border-2 border-white text-white rounded-lg font-bold hover:bg-white/10 transition-colors"
+                    >
+                      الدليل الإرشادي
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Content Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto space-y-12">
+            {/* Full Description */}
+            {program.fullDescription && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="bg-white rounded-2xl p-8 shadow-lg border-2"
+                style={{ borderColor: ACCENT_COLOR }}
+              >
+                <div className="relative inline-block mb-6">
+                  <div 
+                    className="absolute -inset-x-4 -inset-y-2 rounded-full opacity-15"
+                    style={{ backgroundColor: ACCENT_COLOR }}
+                  />
+                  <h2 className="relative text-3xl font-bold" style={{ color: PRIMARY_COLOR }}>
+                    نبذة عن البرنامج
+                  </h2>
+                </div>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                  {program.fullDescription}
+                </p>
+              </motion.div>
+            )}
+
+            {/* Main Features */}
+            {program.mainFeatures && program.mainFeatures.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="bg-white rounded-2xl p-8 shadow-lg border-2"
+                style={{ borderColor: ACCENT_COLOR }}
+              >
+                <div className="relative inline-block mb-6">
+                  <div 
+                    className="absolute -inset-x-4 -inset-y-2 rounded-full opacity-15"
+                    style={{ backgroundColor: ACCENT_COLOR }}
+                  />
+                  <h2 className="relative text-3xl font-bold" style={{ color: PRIMARY_COLOR }}>
+                    المميزات الرئيسية
+                  </h2>
+                </div>
+                <ul className="grid md:grid-cols-2 gap-4">
+                  {program.mainFeatures.map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <span className="text-xl mt-1" style={{ color: ACCENT_COLOR }}>✓</span>
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
+
+            {/* Supported Activities */}
+            {program.supportedActivities && program.supportedActivities.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="bg-white rounded-2xl p-8 shadow-lg border-2"
+                style={{ borderColor: ACCENT_COLOR }}
+              >
+                <div className="relative inline-block mb-6">
+                  <div 
+                    className="absolute -inset-x-4 -inset-y-2 rounded-full opacity-15"
+                    style={{ backgroundColor: ACCENT_COLOR }}
+                  />
+                  <h2 className="relative text-3xl font-bold" style={{ color: PRIMARY_COLOR }}>
+                    الأنشطة المدعومة
+                  </h2>
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  {program.supportedActivities.map((activity, idx) => (
+                    <span 
+                      key={idx} 
+                      className="px-4 py-2 rounded-lg font-semibold"
+                      style={{ backgroundColor: `${ACCENT_COLOR}20`, color: PRIMARY_COLOR }}
+                    >
+                      {activity}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* System Requirements */}
+            {program.systemRequirements && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="bg-white rounded-2xl p-8 shadow-lg border-2"
+                style={{ borderColor: ACCENT_COLOR }}
+              >
+                <div className="relative inline-block mb-6">
+                  <div 
+                    className="absolute -inset-x-4 -inset-y-2 rounded-full opacity-15"
+                    style={{ backgroundColor: ACCENT_COLOR }}
+                  />
+                  <h2 className="relative text-3xl font-bold" style={{ color: PRIMARY_COLOR }}>
+                    متطلبات التشغيل
+                  </h2>
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {program.systemRequirements.os && program.systemRequirements.os.length > 0 && (
+                    <div>
+                      <h3 className="font-bold text-gray-900 mb-2">أنظمة التشغيل:</h3>
+                      <ul className="list-disc list-inside text-gray-700 space-y-1">
+                        {program.systemRequirements.os.map((os, idx) => (
+                          <li key={idx}>{os}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {program.systemRequirements.processor && (
+                    <div>
+                      <h3 className="font-bold text-gray-900 mb-2">المعالج:</h3>
+                      <p className="text-gray-700">{program.systemRequirements.processor}</p>
+                    </div>
+                  )}
+                  {program.systemRequirements.ram && (
+                    <div>
+                      <h3 className="font-bold text-gray-900 mb-2">الذاكرة (RAM):</h3>
+                      <p className="text-gray-700">{program.systemRequirements.ram}</p>
+                    </div>
+                  )}
+                  {program.systemRequirements.storage && (
+                    <div>
+                      <h3 className="font-bold text-gray-900 mb-2">التخزين:</h3>
+                      <p className="text-gray-700">{program.systemRequirements.storage}</p>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Pricing */}
+            {(program.hasSubscription && program.subscriptionPackages && program.subscriptionPackages.length > 0) && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="bg-white rounded-2xl p-8 shadow-lg border-2"
+                style={{ borderColor: ACCENT_COLOR }}
+              >
+                {/* <div className="relative inline-block mb-6">
+                  <div 
+                    className="absolute -inset-x-4 -inset-y-2 rounded-full opacity-15"
+                    style={{ backgroundColor: ACCENT_COLOR }}
+                  />
+                  <h2 className="relative text-3xl font-bold" style={{ color: PRIMARY_COLOR }}>
+                    التسعير
+                  </h2>
+                </div> */}
+                {/* {program.basePrice && (
+                  <div className="text-4xl font-bold mb-4" style={{ color: PRIMARY_COLOR }}>
+                    ${program.basePrice}
+                  </div>
+                )} */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                    {program.subscriptionPackages.map((pkg, idx) => (
+                      <motion.div 
+                        key={idx} 
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: idx * 0.1 }}
+                        className="bg-white rounded-2xl overflow-hidden shadow-lg border-2 hover:shadow-xl transition-shadow duration-300 py-2 h-full flex flex-col"
+                        style={{ borderColor: ACCENT_COLOR }}
+                      >
+                        {/* Card Content */}
+                        <div className="p-6 text-center flex flex-col flex-grow">
+                          {/* Icon */}
+                          <div 
+                            className="w-16 h-16 mx-auto mb-4 rounded-xl flex items-center justify-center"
+                            style={{ backgroundColor: `${ACCENT_COLOR}15`, border: `2px solid ${ACCENT_COLOR}` }}
+                          >
+                            <svg 
+                              className="w-8 h-8" 
+                              style={{ color: PRIMARY_COLOR }}
+                              fill="none" 
+                              stroke="currentColor" 
+                              viewBox="0 0 24 24"
+                            >
+                              <path 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round" 
+                                strokeWidth={2} 
+                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" 
+                              />
+                            </svg>
+                          </div>
+
+                          {/* Package Name */}
+                          <h4 className="font-bold text-xl mb-2" style={{ color: PRIMARY_COLOR }}>
+                            {pkg.name}
+                          </h4>
+                          <p className="text-xl text-black mb-4">
+                            {idx === program.subscriptionPackages!.length - 1 ? 'يبدأ من' : '\u00A0'}
+                          </p>
+
+                          {/* Price Box */}
+                          <div 
+                            className="rounded-xl py-4 px-6 mb-4"
+                            style={{ backgroundColor: PRIMARY_COLOR }}
+                          >
+                            <div className="flex items-center justify-center gap-2 text-white">
+                              <span className="text-lg">ريال</span>
+                              <span className="text-4xl font-bold">{pkg.price}</span>
+                            </div>
+                          </div>
+
+                          {/* Duration/Category */}
+                          <p className="text-gray-600 mb-6">{pkg.type}</p>
+
+                          {/* Features List */}
+                          <div className="flex-grow">
+                            {pkg.features && pkg.features.length > 0 && (
+                              <ul className="text-right space-y-2 mb-6">
+                                {pkg.features.map((feature, fIdx) => (
+                                  <li key={fIdx} className="flex items-start gap-2 text-sm text-gray-700">
+                                    <span style={{ color: ACCENT_COLOR }}>✓</span>
+                                    <span>{feature}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+
+                          {/* CTA Button - Always at bottom */}
+                          <Link
+                            href={idx === program.subscriptionPackages!.length - 1 ? "/contact" : "/programs/comparison"}
+                            className="w-full py-3 px-6 rounded-full font-bold text-white transition-all duration-300 hover:opacity-90 hover:scale-105 block text-center mt-auto"
+                            style={{ backgroundColor: PRIMARY_COLOR }}
+                          >
+                            {idx === program.subscriptionPackages!.length - 1 ? "تواصل معنا" : "معرفة المزيد"}
+                          </Link>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+              </motion.div>
+            )}
+
+            {/* Back Button */}
+            <div className="text-center">
+              <Link
+                href="/"
+                className="inline-block px-8 py-4 text-white rounded-lg font-bold hover:opacity-90 transition-opacity"
+                style={{ backgroundColor: PRIMARY_COLOR }}
+              >
+                العودة للرئيسية
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+

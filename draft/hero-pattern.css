@@ -1,0 +1,21 @@
+/* app/components/hero-pattern.css */
+
+/* Utility for the dotted clusters */
+.bg-dot-pattern {
+  /* Default dot color (can be overridden via inline styles if needed for specific clusters) */
+  --dot-color: rgba(45, 42, 112, 0.4);
+  --dot-size: 2px;
+  --dot-space: 20px;
+
+  background-image: radial-gradient(
+    var(--dot-color) var(--dot-size), 
+    transparent var(--dot-size)
+  );
+  background-size: var(--dot-space) var(--dot-space);
+}
+
+/* While Tailwind arbitrary values work for clip-paths, 
+  complex polygons are often cleaner in CSS classes if reused. 
+  However, per your spec, we will apply the specific polygons 
+  via inline styles in the component to allow dynamic tweaking.
+*/
