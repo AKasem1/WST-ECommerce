@@ -54,9 +54,9 @@ export default function Footer() {
               2622-امام الطازج
             </p>
             <div className="mt-4 space-y-2 text-sm">
-              <p dir="ltr">whatsapp: +(966) 594-013037</p>
-              <p dir="ltr">Phone: +(966) 55-0887101</p>
-              <p dir="ltr">Phone: +(966) 594-013037</p>
+              <p dir="ltr">whatsapp: +966594013037</p>
+              <p dir="ltr">Phone: +966550887101</p>
+              <p dir="ltr">Phone: +966594013037</p>
               <p dir="ltr">Email: support@wessams.com</p>
             </div>
           </motion.div>
