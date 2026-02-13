@@ -69,11 +69,11 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 {/* Badges - Stacked on the right */}
                 <div className="flex flex-col items-start gap-3">
                   {/* Stock Badge */}
-                  <span className={`px-6 py-3 rounded-full font-bold text-lg ${
+                  {/* <span className={`px-6 py-3 rounded-full font-bold text-lg ${
                     product.quantity > 0 ? 'bg-green-500' : 'bg-red-500'
                   }`}>
                     {product.quantity > 0 ? `متوفر (${product.quantity} قطعة)` : 'غير متوفر'}
-                  </span>
+                  </span> */}
 
                   {/* Visibility Badge */}
                   {product.visibility && (
@@ -162,16 +162,16 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                     {product.price.toFixed(2)} ر.س
                   </p>
                 </div>
-                <div>
+                {/* <div>
                   <h3 className="font-bold text-gray-900 mb-2">الكمية المتوفرة:</h3>
                   <p className="text-gray-700">{product.quantity} قطعة</p>
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                   <h3 className="font-bold text-gray-900 mb-2">الحالة:</h3>
                   <p className={`font-bold ${product.quantity > 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {product.quantity > 0 ? 'متوفر' : 'غير متوفر'}
                   </p>
-                </div>
+                </div> */}
               </div>
             </motion.div>
 

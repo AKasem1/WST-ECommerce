@@ -444,13 +444,13 @@ export default function ShopClient({
                 {/* Products Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
                   {products.map((product, index) => (
-                    <motion.div
-                      key={product._id}
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.05 }}
-                      className="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-2xl transition-shadow duration-300"
-                    >
+                    <Link href={`/products/${product.slug}`} key={product._id}>
+                      <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: index * 0.05 }}
+                        className="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-2xl transition-shadow duration-300 cursor-pointer h-full"
+                      >
                       {/* Product Image */}
                       <div className="relative h-48 overflow-hidden bg-gray-100">
                         <Image
@@ -494,7 +494,7 @@ export default function ShopClient({
                           </div>
 
                           {/* Stock Badge */}
-                          <div
+                          {/* <div
                             className={`px-3 py-1 rounded-full text-xs font-semibold ${
                               product.quantity > 0
                                 ? 'bg-green-100 text-green-700'
@@ -504,14 +504,18 @@ export default function ShopClient({
                             {product.quantity > 0
                               ? `متوفر (${product.quantity})`
                               : 'غير متوفر'}
-                          </div>
+                          </div> */}
                         </div>
 
                         {/* WhatsApp Button */}
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          onClick={() => handleWhatsApp(product)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleWhatsApp(product);
+                          }}
                           className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-semibold text-white transition-all duration-300"
                           style={{ backgroundColor: '#25D366' }}
                         >
@@ -522,7 +526,8 @@ export default function ShopClient({
                         </motion.button>
                       </div>
                     </motion.div>
-                  ))}
+                  </Link>
+                ))}
                 </div>
 
                 {/* Pagination */}
