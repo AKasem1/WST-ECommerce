@@ -1,6 +1,7 @@
-'use client';
 
-import { useState } from 'react';
+'use client';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Modal from './Modal';
 import ConfirmDialog from './ConfirmDialog';
@@ -11,12 +12,22 @@ import type { CategoryResponse } from '@/types/category-api';
 interface ProductsClientProps {
   initialProducts: ProductResponse[];
   categories: CategoryResponse[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
 }
 
-export default function ProductsClient({ initialProducts, categories }: ProductsClientProps) {
+export default function ProductsClient({ initialProducts, categories, pagination }: ProductsClientProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
   const [products, setProducts] = useState<ProductResponse[]>(initialProducts);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+  const [categoryFilter, setCategoryFilter] = useState(searchParams.get('categoryId') || '');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -27,6 +38,58 @@ export default function ProductsClient({ initialProducts, categories }: Products
   const [imageInputType, setImageInputType] = useState<'file' | 'url'>('file');
   const [imageUrl, setImageUrl] = useState<string>('');
 
+  // Update products when initialProducts change (from server)
+  useEffect(() => {
+    setProducts(initialProducts);
+  }, [initialProducts]);
+
+  // Sync state with URL params
+  useEffect(() => {
+    setSearchTerm(searchParams.get('search') || '');
+    setCategoryFilter(searchParams.get('categoryId') || '');
+  }, [searchParams]);
+
+  // Update URL function
+  const updateURL = (params: Record<string, string | null>) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === null || value === '') {
+        current.delete(key);
+      } else {
+        current.set(key, value);
+      }
+    });
+
+    // Always reset to page 1 when filtering/searching
+    if (params.page === undefined && (params.categoryId !== undefined || params.search !== undefined)) {
+      current.delete('page');
+    }
+
+    const search = current.toString();
+    const query = search ? `?${search}` : '';
+    router.push(`${pathname}${query}`);
+  };
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    // Debounce search update to URL if needed, but for now direct is fine
+    updateURL({ search: term });
+  };
+
+  const handleCategoryChange = (categoryId: string) => {
+    setCategoryFilter(categoryId);
+    updateURL({ categoryId });
+  };
+
+  const handlePageChange = (page: number) => {
+    updateURL({ page: page.toString() });
+  };
+
+  // Filter products locally for search (optional, or just rely on server)
+  // Since we are moving to server-side, we use `products` directly.
+  const filteredProducts = products;
+
   // Form state
   const [formData, setFormData] = useState({
     modelNumber: '',
@@ -36,15 +99,6 @@ export default function ProductsClient({ initialProducts, categories }: Products
     categoryId: '',
     productImage: '',
     visibility: true,
-  });
-
-  // Filter products
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch =
-      product.modelNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.productSpecs.some(spec => spec.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesCategory = !categoryFilter || product.categoryId.toString() === categoryFilter;
-    return matchesSearch && matchesCategory;
   });
 
   // Reset form
@@ -266,20 +320,20 @@ export default function ProductsClient({ initialProducts, categories }: Products
       </div>
 
       {/* Filters */}
-      {/* <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
             type="text"
             placeholder="ابحث عن منتج..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={(e) => handleSearch(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
             dir="rtl"
           />
           <select
             value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={(e) => handleCategoryChange(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
             dir="rtl"
           >
             <option value="">جميع الفئات</option>
@@ -290,7 +344,7 @@ export default function ProductsClient({ initialProducts, categories }: Products
             ))}
           </select>
         </div>
-      </div> */}
+      </div>
 
       {/* Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -391,6 +445,56 @@ export default function ProductsClient({ initialProducts, categories }: Products
             </tbody>
           </table>
         </div>
+        
+        {/* Pagination */}
+        {pagination.totalPages > 1 && (
+          <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between" dir="rtl">
+            <div className="text-sm text-gray-700">
+              عرض {Math.min((pagination.page - 1) * pagination.limit + 1, pagination.total)} إلى {Math.min(pagination.page * pagination.limit, pagination.total)} من {pagination.total} منتج
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handlePageChange(pagination.page - 1)}
+                disabled={pagination.page <= 1}
+                className="px-3 py-1 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                السابق
+              </button>
+              <div className="flex gap-1">
+                {Array.from({ length: Math.min(pagination.totalPages, 7) }, (_, i) => {
+                  let pageNum;
+                  if (pagination.totalPages <= 7) {
+                    pageNum = i + 1;
+                  } else {
+                    if (pagination.page <= 4) pageNum = i + 1;
+                    else if (pagination.page > pagination.totalPages - 4) pageNum = pagination.totalPages - 6 + i;
+                    else pageNum = pagination.page - 3 + i;
+                  }
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => handlePageChange(pageNum)}
+                      className={`px-3 py-1 border rounded-md cursor-pointer transition-colors ${
+                        pagination.page === pageNum
+                          ? 'bg-blue-600 text-white border-blue-600'
+                          : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+              </div>
+              <button
+                onClick={() => handlePageChange(pagination.page + 1)}
+                disabled={pagination.page >= pagination.totalPages}
+                className="px-3 py-1 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-50 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                التالي
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Create Modal */}
