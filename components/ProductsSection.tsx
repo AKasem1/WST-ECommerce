@@ -11,6 +11,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import '@/app/swiper-custom.css';
 import type { ProductResponse } from '@/types/product';
+import RamadanBanner from './RamadanBanner';
 
 // Accent color (previous title color) - used for borders and decorative shapes
 const ACCENT_COLOR = '#382A67';
@@ -56,6 +57,7 @@ export default function ProductsSection() {
 
   return (
     <section className="py-20 bg-white" dir="rtl">
+      <RamadanBanner />
       <div className="container mx-auto px-4">
         {/* Section Title with Modern Shape */}
         <motion.div
