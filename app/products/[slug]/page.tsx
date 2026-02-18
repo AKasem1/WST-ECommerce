@@ -3,20 +3,19 @@ import ProductDetailClient from '@/components/ProductDetailClient';
 
 async function getProduct(slug: string) {
   try {
-    // Fetch all products and find by slug
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/products?limit=100`,
+      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/products/${slug}`,
       { cache: 'no-store' }
     );
 
     if (!response.ok) {
-      return null;
+      if (response.status === 404) {
+        return null;
+      }
+      throw new Error(`Failed to fetch product: ${response.statusText}`);
     }
 
-    const data = await response.json();
-    const product = data.products?.find((p: any) => p.slug === slug);
-    
-    return product || null;
+    return await response.json();
   } catch (error) {
     console.error('Error fetching product:', error);
     return null;
