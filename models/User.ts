@@ -6,6 +6,7 @@ export enum UserRole {
   USER = 'user',
   ADMIN = 'admin',
 }
+// commit comment 
 
 // Interface for User document
 export interface IUser extends Document {
