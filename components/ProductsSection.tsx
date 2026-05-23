@@ -16,14 +16,19 @@ import type { ProductResponse } from "@/types/product";
 // Accent color (previous title color) - used for borders and decorative shapes
 const ACCENT_COLOR = "#382A67";
 
+interface FeaturedProduct extends ProductResponse {
+  categoryName: string;
+  categorySlug: string;
+}
+
 export default function ProductsSection() {
-  const [products, setProducts] = useState<ProductResponse[]>([]);
+  const [products, setProducts] = useState<FeaturedProduct[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/api/products?limit=10");
+        const response = await fetch("/api/products/featured-by-category");
         const data = await response.json();
         setProducts(data.products || []);
       } catch (error) {
@@ -157,6 +162,14 @@ export default function ProductsSection() {
 
                     {/* Product Info */}
                     <div className="p-4 space-y-3">
+                      {/* Category Badge */}
+                      <span
+                        className="inline-block px-2 py-0.5 rounded-full text-xs font-semibold text-white"
+                        style={{ backgroundColor: ACCENT_COLOR }}
+                      >
+                        {product.categoryName}
+                      </span>
+
                       {/* Model Number */}
                       <h3
                         className="font-bold text-lg truncate"
